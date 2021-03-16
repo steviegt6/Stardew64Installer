@@ -17,6 +17,9 @@ namespace Stardew64Installer
         private const string soft_oalName = "soft_oal.dll";
         private const string SteamworksDLLName = "Steamworks.NET.dll";
         private const string CMDCorFlagsInfo = "/C CorFlags.exe Steamworks.NET.dll /32BITREQ-";
+        private const string CMDMMInfo = "/C MonoMod.exe StardewValley.exe";
+        private const string MMExeName = "MONOMODDED_StardewValley.exe";
+        private const string ExeName = "Stardew Valley.exe";
 
         private static void Main()
         {
@@ -77,6 +80,7 @@ namespace Stardew64Installer
 
             CorFlagSteamworks(installationFolder);
             CopyRequiredDLLs(installationFolder);
+            ApplyMonoModPatches(installationFolder);
             Console.ReadLine();
         }
 
@@ -116,6 +120,27 @@ namespace Stardew64Installer
             Console.WriteLine("Copying required DLLs over to the installation location...");
             File.Copy(Path.Combine(LibPath, soft_oalName), Path.Combine(installPath, soft_oalName), true);
             File.Copy(Path.Combine(LibPath, SDL2Name), Path.Combine(installPath, SDL2Name), true);
+        }
+
+        private static void ApplyMonoModPatches(string installPath)
+        {
+            Console.WriteLine("Applying MonoMod patches...");
+
+            new Process
+            {
+                StartInfo = new ProcessStartInfo()
+                {
+                    WindowStyle = ProcessWindowStyle.Hidden,
+                    FileName = "cmd.exe",
+                    Arguments = CMDMMInfo
+                }
+            }.Start();
+
+            while (!File.Exists(Path.Combine(ExePath, MMExeName))) 
+                Console.ReadLine();
+
+            Console.WriteLine("Copying the modified EXE over to the installation location...");
+            File.Copy(Path.Combine(ExePath, MMExeName), Path.Combine(installPath, ExeName), true);
         }
     }
 }

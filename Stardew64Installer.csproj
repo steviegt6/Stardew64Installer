@@ -6,6 +6,25 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Mono.Cecil" Version="0.11.3" />
+    <PackageReference Include="MonoMod" Version="21.3.1.1" />
+    <PackageReference Include="MonoMod.Common" Version="21.1.12.5" />
+    <PackageReference Include="MonoMod.RuntimeDetour" Version="21.3.1.1" />
+    <PackageReference Include="MonoMod.RuntimeDetour.HookGen" Version="21.3.1.1" />
+    <PackageReference Include="MonoMod.Utils" Version="21.3.1.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="MonoGame.Framework">
+      <HintPath>Stardew64Patches\libs\MonoGame.Framework.dll</HintPath>
+    </Reference>
+    <Reference Include="StardewValley">
+      <HintPath>Stardew64Patches\libs\StardewValley.exe</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
     <None Update="SDVLibs\SDL2.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
