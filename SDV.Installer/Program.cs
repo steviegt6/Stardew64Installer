@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 
 namespace Stardew64Installer
@@ -44,14 +45,31 @@ namespace Stardew64Installer
             "xTilePipeline"
         };
 
+        private static readonly List<string> dirtyFiles = new List<string>
+        {
+            "MONOMODDED_StardewValley.exe",
+            "MONOMODDED_StardewValley.pdb"
+        };
+
         private const string SteamworksDLLName = "Steamworks.NET.dll";
         private const string CMDCorFlagsInfo = "/C CorFlags.exe Steamworks.NET.dll /32BITREQ-";
-        private const string CMDMMInfo = "/C MonoMod.dll StardewValley.exe";
+        private const string CMDMMInfo = "/C MonoMod.exe StardewValley.exe";
         private const string MMExeName = "MONOMODDED_StardewValley.exe";
         private const string ExeName = "Stardew Valley.exe";
 
         private static void Main()
         {
+            Console.WriteLine("Cleaning out any MONOMODDED files...");
+
+            foreach (string file in dirtyFiles.Where(file => File.Exists(Path.Combine(ExePath, file))))
+            {
+                File.Delete(Path.Combine(ExePath, file));
+                Console.WriteLine($"Deleted {file}!");
+            }
+
+            for (int i = 0; i < 3; i++) 
+                Console.WriteLine();
+
             Console.WriteLine(" Welcome to the Stardew Valley 64bit patcher!");
             Console.WriteLine("  Please note that this program requires a copy of the Linux version of Stardew Valley.");
             Console.WriteLine("  You will have to install this manually through DepotDownloader.");
@@ -181,11 +199,17 @@ namespace Stardew64Installer
                 }
             }.Start();
 
-            while (!File.Exists(Path.Combine(ExePath, MMExeName))) 
-                Console.ReadLine();
-
             Console.WriteLine("Copying the modified EXE over to the installation location...");
-            File.Copy(Path.Combine(ExePath, MMExeName), Path.Combine(installPath, ExeName), true);
+
+            RetryMMCopy:
+            try
+            {
+                File.Copy(Path.Combine(ExePath, MMExeName), Path.Combine(installPath, ExeName), true);
+            }
+            catch (FileNotFoundException)
+            {
+                goto RetryMMCopy;
+            }
 
             WriteReadLine("Copied the modified EXE over to the installation location!");
         }

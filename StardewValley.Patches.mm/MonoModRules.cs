@@ -25,7 +25,7 @@ namespace MonoMod
         {
             if (!method.HasBody)
                 return;
-            return;
+
             ILCursor c = new ILCursor(new ILContext(method));
 
             for (int i = 0; i < 3; i++)
@@ -53,7 +53,7 @@ namespace MonoMod
         {
             if (!method.HasBody)
                 return;
-            return;
+
             ILCursor c = new ILCursor(new ILContext(method));
 
             c.TryGotoNext(il => il.MatchRet());
