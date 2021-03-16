@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30204.135
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stardew64Installer", "Stardew64Installer.csproj", "{EF1CD741-E5CD-49FA-A371-222CB5E568A3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SDV.Installer", "SDV.Installer\SDV.Installer.csproj", "{2CEAFE8E-D16B-45E6-B030-FD4C5649804D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stardew64Patches", "..\Stardew64Patches\Stardew64Patches.csproj", "{40105083-E598-4981-86F0-E829AD284232}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StardewValley.Patches.mm", "StardewValley.Patches.mm\StardewValley.Patches.mm.csproj", "{8B39F142-D14A-47FE-99BE-610A522C6AE5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,14 +13,14 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{EF1CD741-E5CD-49FA-A371-222CB5E568A3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{EF1CD741-E5CD-49FA-A371-222CB5E568A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{EF1CD741-E5CD-49FA-A371-222CB5E568A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{EF1CD741-E5CD-49FA-A371-222CB5E568A3}.Release|Any CPU.Build.0 = Release|Any CPU
-		{40105083-E598-4981-86F0-E829AD284232}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{40105083-E598-4981-86F0-E829AD284232}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{40105083-E598-4981-86F0-E829AD284232}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{40105083-E598-4981-86F0-E829AD284232}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2CEAFE8E-D16B-45E6-B030-FD4C5649804D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2CEAFE8E-D16B-45E6-B030-FD4C5649804D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2CEAFE8E-D16B-45E6-B030-FD4C5649804D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2CEAFE8E-D16B-45E6-B030-FD4C5649804D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8B39F142-D14A-47FE-99BE-610A522C6AE5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8B39F142-D14A-47FE-99BE-610A522C6AE5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8B39F142-D14A-47FE-99BE-610A522C6AE5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8B39F142-D14A-47FE-99BE-610A522C6AE5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
