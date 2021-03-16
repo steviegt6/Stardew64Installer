@@ -152,10 +152,10 @@ namespace Stardew64Installer
             foreach (string dllName in dllsToCopy)
             {
                 // TODO: Remove exec step
-                Console.WriteLine($"Copying {dllName}.dll to the executable directory...");
+                Console.WriteLine($" Copying {dllName}.dll -> exec directory...");
                 File.Copy(Path.Combine(LibPath, dllName + ".dll"), Path.Combine(ExePath, dllName + ".dll"), true);
 
-                Console.WriteLine($"Copying {dllName}.dll to the SDV directory...");
+                Console.WriteLine($" Copying {dllName}.dll -> SDV directory...");
                 File.Copy(Path.Combine(LibPath, dllName + ".dll"), Path.Combine(installPath, dllName + ".dll"), true);
             }
 
@@ -163,6 +163,8 @@ namespace Stardew64Installer
             foreach (string dllName in dllsToCopy)
                 while (!File.Exists(Path.Combine(installPath, dllName + ".dll")))
                     Console.ReadLine();
+
+            Console.WriteLine();
         }
 
         private static void ApplyMonoModPatches(string installPath)
@@ -184,6 +186,8 @@ namespace Stardew64Installer
 
             Console.WriteLine("Copying the modified EXE over to the installation location...");
             File.Copy(Path.Combine(ExePath, MMExeName), Path.Combine(installPath, ExeName), true);
+
+            WriteReadLine("Copied the modified EXE over to the installation location!");
         }
     }
 }
