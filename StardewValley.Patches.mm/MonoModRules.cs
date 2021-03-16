@@ -1,10 +1,10 @@
-﻿using Mono.Cecil;
-using System;
+﻿using System;
 using System.IO;
 using System.Reflection;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Input;
+using Mono.Cecil;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using StardewValley;
@@ -35,7 +35,7 @@ namespace MonoMod
             c.RemoveRange(25);
 
             c.Emit(OpCodes.Ldloc_0);
-            c.EmitDelegate<Action<string>>((rootDirectory) =>
+            c.EmitDelegate<Action<string>>(rootDirectory =>
                                            {
                                                Game1.soundBank = new SoundBankWrapper(
                                                    new SoundBank(Game1.audioEngine.Engine,

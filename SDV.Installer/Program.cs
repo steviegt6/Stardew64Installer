@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
@@ -13,8 +14,36 @@ namespace Stardew64Installer
 
         private static string LibPath => ExePath + Path.DirectorySeparatorChar + "SDVLibs";
 
-        private const string SDL2Name = "SDL2.dll";
-        private const string soft_oalName = "soft_oal.dll";
+        // TODO: Figure out which DLLs are actually needed
+        private static readonly List<string> dllsToCopy = new List<string>
+        {
+            "BmFont",
+            "GalaxyCSharp",
+            "libSkiaSharp",
+            "Lidgren.Network",
+            "Mono.Posix",
+            "Mono.Security",
+            "MonoGame.Framework",
+            "mscorlib",
+            "SDL2",
+            "SkiaSharp",
+            "soft_oal",
+            "StardewValley.GameData",
+            "Steamworks.NET",
+            "System.Configuration",
+            "System.Core",
+            "System.Data",
+            "System",
+            "System.Drawing",
+            "System.Runtime.Serialization",
+            "System.Security",
+            "System.Xml",
+            "System.Xml.Linq",
+            "WindowsBase",
+            "xTile",
+            "xTilePipeline"
+        };
+
         private const string SteamworksDLLName = "Steamworks.NET.dll";
         private const string CMDCorFlagsInfo = "/C CorFlags.exe Steamworks.NET.dll /32BITREQ-";
         private const string CMDMMInfo = "/C MonoMod.dll StardewValley.exe";
@@ -61,8 +90,9 @@ namespace Stardew64Installer
 
         private static void DepotDownloadMessage()
         {
+            // TODO: Integrate this into this program... eventually?
             Console.WriteLine();
-            Console.WriteLine("Please download DepotDownloader through https://gyazo.com/98e79051032c7efe3d22feb50110a29d");
+            Console.WriteLine("Please download DepotDownloader through https://github.com/SteamRE/DepotDownloader");
             Console.ReadLine();
         }
 
@@ -71,11 +101,11 @@ namespace Stardew64Installer
             if (!File.Exists("StardewValley.exe"))
             {
                 Console.WriteLine();
-                Console.WriteLine("No executable file with the name \"StardewValley.exe\" was found in the same directory as Stardew64Installer!");
-                Console.ReadLine();
+                WriteReadLine("No executable file with the name \"StardewValley.exe\" was found in the same directory as Stardew64Installer!");
                 return;
             }
 
+            // TODO: Auto-detect install locations
             string installationFolder = WriteReadLine("Please provide the location of the Steam installation for Stardew Valley:");
 
             CorFlagSteamworks(installationFolder);
@@ -87,23 +117,23 @@ namespace Stardew64Installer
         private static string WriteReadLine(string value)
         {
             Console.WriteLine(value);
-            Console.WriteLine();
+            // Console.WriteLine();
             return Console.ReadLine();
         }
 
         private static void CorFlagSteamworks(string installPath)
         {
-            Console.WriteLine("Copying Steamworks.NET.dll...");
+            Console.WriteLine("Copying Steamworks.NET.dll to executable directory...");
             string dllPath = Path.Combine(installPath, SteamworksDLLName);
             string newPath = Path.Combine(ExePath, SteamworksDLLName);
 
             File.Copy(dllPath, newPath, true);
 
-            Console.WriteLine("Modifying DLL flags with CorFlags..." +
-                              "\n(This comes pre-installed with Visual Studio, if you do not have it installed, please download it.)");
+            Console.WriteLine("Modifying Steamworks.NET.dll flags with CorFlags..." +
+                              "\n(If this does not work, please re-launch with administrator privileges)");
             new Process
             {
-                StartInfo = new ProcessStartInfo()
+                StartInfo = new ProcessStartInfo
                 {
                     WindowStyle = ProcessWindowStyle.Hidden, 
                     FileName = "cmd.exe",
@@ -117,9 +147,22 @@ namespace Stardew64Installer
 
         private static void CopyRequiredDLLs(string installPath)
         {
-            Console.WriteLine("Copying required DLLs over to the installation location...");
-            File.Copy(Path.Combine(LibPath, soft_oalName), Path.Combine(installPath, soft_oalName), true);
-            File.Copy(Path.Combine(LibPath, SDL2Name), Path.Combine(installPath, SDL2Name), true);
+            Console.WriteLine("Copying required DLLs over to the installation location:");
+
+            foreach (string dllName in dllsToCopy)
+            {
+                // TODO: Remove exec step
+                Console.WriteLine($"Copying {dllName}.dll to the executable directory...");
+                File.Copy(Path.Combine(LibPath, dllName + ".dll"), Path.Combine(ExePath, dllName + ".dll"), true);
+
+                Console.WriteLine($"Copying {dllName}.dll to the SDV directory...");
+                File.Copy(Path.Combine(LibPath, dllName + ".dll"), Path.Combine(installPath, dllName + ".dll"), true);
+            }
+
+            // Is this separate loop required for waiting until all DLLs are copied?
+            foreach (string dllName in dllsToCopy)
+                while (!File.Exists(Path.Combine(installPath, dllName + ".dll")))
+                    Console.ReadLine();
         }
 
         private static void ApplyMonoModPatches(string installPath)
@@ -128,8 +171,9 @@ namespace Stardew64Installer
 
             new Process
             {
-                StartInfo = new ProcessStartInfo()
+                StartInfo = new ProcessStartInfo
                 {
+                    //WindowStyle = ProcessWindowStyle.Hidden,
                     FileName = "cmd.exe",
                     Arguments = CMDMMInfo
                 }
