@@ -56,7 +56,7 @@ namespace SDV.Installer
         };
 
         //private const string SteamworksDLLName = "Steamworks.NET.dll";
-        private const string CMDCorFlagsInfo = "/C CorFlags.exe Steamworks.NET.dll /32BITREQ-";
+        private const string CMDCorFlagsInfo = "/C CorFlags.exe MONOMODDED_StardewValley.exe /32BITREQ-";
         private const string CMDMMInfo = "/C MonoMod.exe StardewValley.exe";
         private const string ExeName = "StardewValley.exe";
         private const string MMExeName = "MONOMODDED_" + ExeName;
@@ -200,7 +200,7 @@ namespace SDV.Installer
             {
                 StartInfo = new ProcessStartInfo
                 {
-                    //WindowStyle = ProcessWindowStyle.Hidden,
+                    WindowStyle = ProcessWindowStyle.Hidden,
                     FileName = "cmd.exe",
                     Arguments = CMDMMInfo
                 }
@@ -218,7 +218,7 @@ namespace SDV.Installer
                 {
                     StartInfo = new ProcessStartInfo
                     {
-                        WindowStyle = ProcessWindowStyle.Hidden,
+                        //WindowStyle = ProcessWindowStyle.Hidden,
                         FileName = "cmd.exe",
                         Arguments = CMDCorFlagsInfo
                     }
