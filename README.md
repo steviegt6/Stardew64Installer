@@ -37,7 +37,11 @@ StardewValley.Patches.mm contains patches utilized by Stardew64Installer to allo
 ## Contributing
 Contributing is simple. I don't have a set style guide or any real guidelines to follow, just feel free to PR any changes you feel are fit to make and explain your reasoning as well. We'll discuss further once a PR is made (or you can contact me directly before-hand).
 
+## SMAPI
+SMAPI is currently unsupport, however; support should be coming to SMAPI itself within this week (as of March 17th, 2021). It will change its installer to support Windows XNA and Windows with a Linux install. (See: https://gyazo.com/836b01128839e8d493282836c132ce1a.png)
+
 ## TODO
 - [ ] Automated Linux install through [DepotDownloader](https://github.com/SteamRE/DepotDownloader).
 - [ ] Determine what DLLs are actually required for a proper installation.
 - [ ] Remove the need to move \SDVLibs\ files into the main execution folder while keeping the source clean.
+- [ ] SMAPI support.
