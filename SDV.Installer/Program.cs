@@ -139,7 +139,7 @@ namespace SDV.Installer
 
         private static void CorFlagSteamworks(string installPath)
         {
-            Console.WriteLine("Copying Steamworks.NET.dll to executable directory...");
+            /*Console.WriteLine("Copying Steamworks.NET.dll to executable directory...");
             string dllPath = Path.Combine(installPath, SteamworksDLLName);
             string newPath = Path.Combine(ExePath, SteamworksDLLName);
 
@@ -158,7 +158,7 @@ namespace SDV.Installer
             }.Start();
 
             Console.WriteLine("Copying the modified Steamworks.NET.dll over to the installation location...");
-            File.Copy(newPath, dllPath, true);
+            File.Copy(newPath, dllPath, true);*/
         }
 
         private static void CopyRequiredDLLs(string installPath)
@@ -204,17 +204,32 @@ namespace SDV.Installer
                 }
             }.Start();
 
-            Console.WriteLine("Copying the modified EXE over to the installation location...");
-
             RetryMMCopy:
             try
             {
                 // Give it some time, honestly
-                Thread.Sleep(1000 * 15);
+                Thread.Sleep(1000 * 10);
+                Console.WriteLine("Modifying MONOMODDED_StardewValley.exe flags with CorFlags..." +
+                                  "\n(If this does not work, please re-launch with administrator privileges)");
+
+                new Process
+                {
+                    StartInfo = new ProcessStartInfo
+                    {
+                        WindowStyle = ProcessWindowStyle.Hidden,
+                        FileName = "cmd.exe",
+                        Arguments = CMDCorFlagsInfo
+                    }
+                }.Start();
+
+                Thread.Sleep(1000 * 5);
+                Console.WriteLine("Copying the modified EXE over to the installation location...");
                 File.Copy(Path.Combine(ExePath, MMExeName), Path.Combine(installPath, ExeName), true);
             }
             catch (FileNotFoundException)
             {
+                Console.WriteLine("File not found... retrying...");
+
                 goto RetryMMCopy;
             }
 
