@@ -186,6 +186,13 @@ namespace SDV.Installer
 
         private static void ApplyMonoModPatches(string installPath)
         {
+            Console.WriteLine("Copying over StardewValley.exe to patch...");
+
+            File.Copy(Path.Combine(installPath, ExeName), Path.Combine(ExePath, ExeName), true);
+
+            while (!File.Exists(Path.Combine(ExePath, ExeName)))
+                Console.ReadLine();
+
             Console.WriteLine("Applying MonoMod patches...");
 
             new Process
