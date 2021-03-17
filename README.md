@@ -21,6 +21,7 @@ Credit to @Dradonhunter11 for figuring out how to make SDV 64bit actually work. 
 ## Program Info
 Stardew64Installer is split into two parts: SDV.Installer and StardewValley.Patches.mm. These two projects work together to allow the patching of StardewValley.exe and the automated installation.
 Behind the scenes, CorFlags.exe is utilized to modify Steamworks.NET.dll and [MonoMod](https://github.com/MonoMod/MonoMod) is used to patch StardewValley.exe.
+For the actual steps this program automates, see: [SMAPI Issue #767](https://github.com/Pathoschild/SMAPI/issues/767#issuecomment-799046253).
 
 ### SDV.Installer
 SDV.Installer is a very simple command window program that asks the user for the directory of their Linux SDV installation and shows the user what's currently happening behind the scenes. Nothing fancy.
