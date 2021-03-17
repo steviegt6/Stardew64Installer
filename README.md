@@ -8,7 +8,7 @@ Please note that this isn't all that useful to the average user since this curre
 
 **NOTE:** Due to the fact that this program messes with files (moves, copies, and modifies), AntiViruses may flag or other-wise block this program from performing tasks. If this is the case, please whitelist this program.
 
-CorFlags.exe may also fail to modify Steamworks.NET.dll. If this is the case, please re-launch the program with administrator privileges.
+CorFlags.exe may also fail to modify MONOMODDED_StardewValley.exe. If this is the case, please re-launch the program with administrator privileges.
 
 **Usage instructions:**
 
@@ -19,14 +19,14 @@ CorFlags.exe may also fail to modify Steamworks.NET.dll. If this is the case, pl
 4. Wait. (These's a hard-coded wait time once you reach the MonoMod patching step to allow time from MonoMod to write MONOMODDED_StardewValley.exe) (If it hangs there for over 15-30 seconds, try re-executing the program)
 5. Launch *StardewValley.exe* in the depot-download folder, as it is now modified.
 
-Credit to @Dradonhunter11 for figuring out how to make SDV 64bit actually work. This program simply automates a majority of that process.
+Credit to Dradonhunter11 for figuring out how to make SDV 64bit actually work. This program simply automates a majority of that process.
 
 ## Program Info
 Stardew64Installer is split into two parts: SDV.Installer and StardewValley.Patches.mm. These two projects work together to allow the patching of StardewValley.exe and the automated installation.
 
-Behind the scenes, CorFlags.exe is utilized to modify Steamworks.NET.dll and [MonoMod](https://github.com/MonoMod/MonoMod) is used to patch StardewValley.exe.
+Behind the scenes, CorFlags.exe is utilized to modify MONOMODDED_StardewValley.exe and [MonoMod](https://github.com/MonoMod/MonoMod) is used to patch StardewValley.exe.
 
-For the actual steps this program automates, see: [SMAPI Issue #767](https://github.com/Pathoschild/SMAPI/issues/767#issuecomment-799046253).
+For the actual steps this program automates, see: [SMAPI Issue #767](https://github.com/Pathoschild/SMAPI/issues/767#issuecomment-799046253). (However, do note that CorFlags is used to modify MONOMODDED_StardewValley.exe, not Steamworks.NET.dll)
 
 ### SDV.Installer
 SDV.Installer is a very simple command window program that asks the user for the directory of their Linux SDV installation and shows the user what's currently happening behind the scenes. Nothing fancy.
