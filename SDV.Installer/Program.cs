@@ -119,7 +119,6 @@ namespace SDV.Installer
         {
             Console.WriteLine();
 
-            // TODO: Auto-detect install locations
             string installationFolder = WriteReadLine("Please provide the location of the depot-downloaded copy of Stardew Valley:");
 
             CorFlagSteamworks(installationFolder);
