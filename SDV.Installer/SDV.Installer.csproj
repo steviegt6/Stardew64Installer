@@ -94,6 +94,9 @@
     <Content Include="SDVLibs\MonoGame.Framework.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="SDVLibs\MonoMod.Utils.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="SDVLibs\mscorlib.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

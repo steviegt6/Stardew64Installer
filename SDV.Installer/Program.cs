@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
 
 namespace SDV.Installer
 {
@@ -30,7 +31,7 @@ namespace SDV.Installer
             "SkiaSharp",
             "soft_oal",
             "StardewValley.GameData",
-            "Steamworks.NET",
+            //"Steamworks.NET",
             "System.Configuration",
             "System.Core",
             "System.Data",
@@ -42,7 +43,8 @@ namespace SDV.Installer
             "System.Xml.Linq",
             "WindowsBase",
             "xTile",
-            "xTilePipeline"
+            "xTilePipeline",
+            "MonoMod.Utils"
         };
 
         private static readonly List<string> dirtyFiles = new List<string>
@@ -108,7 +110,8 @@ namespace SDV.Installer
         {
             // TODO: Integrate this into this program... eventually?
             Console.WriteLine();
-            Console.WriteLine("Please download DepotDownloader through https://github.com/SteamRE/DepotDownloader");
+            Console.WriteLine(" Please download DepotDownloader through https://github.com/SteamRE/DepotDownloader" +
+                              "\n Press enter to exit...");
             Console.ReadLine();
         }
 
@@ -122,6 +125,9 @@ namespace SDV.Installer
             CorFlagSteamworks(installationFolder);
             CopyRequiredDLLs(installationFolder);
             ApplyMonoModPatches(installationFolder);
+            Console.WriteLine();
+            Console.WriteLine(" Installation complete! Please launch StardewValley.exe from the depot-download folder!" +
+                              "\n Press enter to exit...");
             Console.ReadLine();
         }
 
@@ -152,7 +158,7 @@ namespace SDV.Installer
                 }
             }.Start();
 
-            Console.WriteLine("Copying the modified DLL over to the installation location...");
+            Console.WriteLine("Copying the modified Steamworks.NET.dll over to the installation location...");
             File.Copy(newPath, dllPath, true);
         }
 
@@ -197,6 +203,8 @@ namespace SDV.Installer
             RetryMMCopy:
             try
             {
+                // Give it some time, honestly
+                Thread.Sleep(1000 * 15);
                 File.Copy(Path.Combine(ExePath, MMExeName), Path.Combine(installPath, ExeName), true);
             }
             catch (FileNotFoundException)
@@ -204,7 +212,7 @@ namespace SDV.Installer
                 goto RetryMMCopy;
             }
 
-            WriteReadLine("Copied the modified EXE over to the installation location!");
+            Console.WriteLine("Copied the modified EXE over to the installation location!");
         }
     }
 }
