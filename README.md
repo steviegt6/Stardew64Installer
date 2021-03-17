@@ -9,6 +9,7 @@ Please note that this isn't all that useful to the average user since this curre
 CorFlags.exe may also fail to modify Steamworks.NET.dll. If this is the case, please re-launch the program with administrator privileges.
 
 **Usage instructions:**
+
 0. Locate and/or obtain a copy of the Linux version of SDV.
 1. Open *SDV.Installer.exe*
 2. Confirm that you're "good to go!"
