@@ -51,10 +51,11 @@ namespace SDV.Installer
         private static readonly List<string> dirtyFiles = new List<string>
         {
             "MONOMODDED_StardewValley.exe",
-            "MONOMODDED_StardewValley.pdb"
+            "MONOMODDED_StardewValley.pdb",
+            "StardewValley.exe"
         };
 
-        private const string SteamworksDLLName = "Steamworks.NET.dll";
+        //private const string SteamworksDLLName = "Steamworks.NET.dll";
         private const string CMDCorFlagsInfo = "/C CorFlags.exe Steamworks.NET.dll /32BITREQ-";
         private const string CMDMMInfo = "/C MonoMod.exe StardewValley.exe";
         private const string ExeName = "StardewValley.exe";
@@ -62,7 +63,7 @@ namespace SDV.Installer
 
         private static void Main()
         {
-            Console.WriteLine("Cleaning out any MONOMODDED files...");
+            Console.WriteLine("Cleaning out any potentially dirty files...");
 
             foreach (string file in dirtyFiles.Where(file => File.Exists(Path.Combine(ExePath, file))))
             {
@@ -122,7 +123,7 @@ namespace SDV.Installer
 
             string installationFolder = WriteReadLine("Please provide the location of the depot-downloaded copy of Stardew Valley:");
 
-            CorFlagSteamworks(installationFolder);
+            CorFlagSteamworks(/*installationFolder*/);
             CopyRequiredDLLs(installationFolder);
             ApplyMonoModPatches(installationFolder);
             Console.WriteLine();
@@ -138,7 +139,7 @@ namespace SDV.Installer
             return Console.ReadLine();
         }
 
-        private static void CorFlagSteamworks(string installPath)
+        private static void CorFlagSteamworks(/*string installPath*/)
         {
             /*Console.WriteLine("Copying Steamworks.NET.dll to executable directory...");
             string dllPath = Path.Combine(installPath, SteamworksDLLName);
