@@ -54,8 +54,8 @@ namespace SDV.Installer
         private const string SteamworksDLLName = "Steamworks.NET.dll";
         private const string CMDCorFlagsInfo = "/C CorFlags.exe Steamworks.NET.dll /32BITREQ-";
         private const string CMDMMInfo = "/C MonoMod.exe StardewValley.exe";
-        private const string MMExeName = "MONOMODDED_StardewValley.exe";
-        private const string ExeName = "Stardew Valley.exe";
+        private const string ExeName = "StardewValley.exe";
+        private const string MMExeName = "MONOMODDED_" + ExeName;
 
         private static void Main()
         {
@@ -67,7 +67,7 @@ namespace SDV.Installer
                 Console.WriteLine($"Deleted {file}!");
             }
 
-            for (int i = 0; i < 3; i++) 
+            for (int i = 0; i < 2; i++) 
                 Console.WriteLine();
 
             Console.WriteLine(" Welcome to the Stardew Valley 64bit patcher!");
@@ -94,9 +94,7 @@ namespace SDV.Installer
             if (optionNum == 1)
                 DepotDownloadMessage();
             else
-                Continue(); 
-                
-            Console.WriteLine();
+                Continue();
         }
 
         private static void ParseFailure()
@@ -116,15 +114,10 @@ namespace SDV.Installer
 
         private static void Continue()
         {
-            if (!File.Exists("StardewValley.exe"))
-            {
-                Console.WriteLine();
-                WriteReadLine("No executable file with the name \"StardewValley.exe\" was found in the same directory as Stardew64Installer!");
-                return;
-            }
+            Console.WriteLine();
 
             // TODO: Auto-detect install locations
-            string installationFolder = WriteReadLine("Please provide the location of the Steam installation for Stardew Valley:");
+            string installationFolder = WriteReadLine("Please provide the location of the depot-downloaded copy of Stardew Valley:");
 
             CorFlagSteamworks(installationFolder);
             CopyRequiredDLLs(installationFolder);
