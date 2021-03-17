@@ -58,9 +58,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include=".gitignore" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="SDVLibs\SDL2.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
