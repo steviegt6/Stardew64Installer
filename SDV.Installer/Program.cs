@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 
-namespace Stardew64Installer
+namespace SDV.Installer
 {
     public static class Program
     {
