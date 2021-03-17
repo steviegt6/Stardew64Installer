@@ -60,7 +60,7 @@ representative at an online or offline event.
 
 Instances of abusive, harassing, or otherwise unacceptable behavior may be
 reported to the community leaders responsible for enforcement in 
-(the Discord)[https://discord.com/invite/qrZ4Bpz] or directly through 
+[the Discord](https://discord.com/invite/qrZ4Bpz) or directly through 
 `convicted tomatophile#0001` on Discord as well.
 All complaints will be reviewed and investigated promptly and fairly.
 
