@@ -3,9 +3,11 @@ This handy piece of software is capable of turning a Linux installation of Stard
 
 ## Installation Instructions
 All you need is a folder with a Linux installation of Stardew Valley (obtained via DepotDownloader).
+
 Please note that this isn't all that useful to the average user since this currently only supports vanilla SDV.
 
 **NOTE:** Due to the fact that this program messes with files (moves, copies, and modifies), AntiViruses may flag or other-wise block this program from performing tasks. If this is the case, please whitelist this program.
+
 CorFlags.exe may also fail to modify Steamworks.NET.dll. If this is the case, please re-launch the program with administrator privileges.
 
 **Usage instructions:**
@@ -21,7 +23,9 @@ Credit to @Dradonhunter11 for figuring out how to make SDV 64bit actually work. 
 
 ## Program Info
 Stardew64Installer is split into two parts: SDV.Installer and StardewValley.Patches.mm. These two projects work together to allow the patching of StardewValley.exe and the automated installation.
+
 Behind the scenes, CorFlags.exe is utilized to modify Steamworks.NET.dll and [MonoMod](https://github.com/MonoMod/MonoMod) is used to patch StardewValley.exe.
+
 For the actual steps this program automates, see: [SMAPI Issue #767](https://github.com/Pathoschild/SMAPI/issues/767#issuecomment-799046253).
 
 ### SDV.Installer
