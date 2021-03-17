@@ -110,6 +110,9 @@
     <Content Include="SDVLibs\Steamworks.NET.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="SDVLibs\steam_api64.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="SDVLibs\System.Configuration.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
