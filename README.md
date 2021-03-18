@@ -1,5 +1,5 @@
 # Stardew64Installer
-This handy piece of software is capable of turning a Linux installation of Stardew Valley into a working 64bit Windows version!
+This handy piece of software is capable of turning a Linux installation of Stardew Valley into a working 64bit Windows version! Credits to @Dradonhunter11 for figuring out how to setup 64bit for Stardew valley
 
 ## Installation Instructions
 All you need is a folder with a Linux installation of Stardew Valley (obtained via DepotDownloader).
