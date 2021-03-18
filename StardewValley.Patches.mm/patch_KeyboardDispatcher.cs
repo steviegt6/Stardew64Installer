@@ -40,8 +40,7 @@ namespace StardewValley
             Delegate handler = Delegate.CreateDelegate(windowTextInput.EventHandlerType, this, "Event_TextInput");
             windowTextInput.AddEventHandler(window, handler);
 
-            if (Game1.game1.IsMainInstance)
-                KeyboardInput.Initialize(window);
+            KeyboardInput.Initialize(window);
         }
 
         public patch_KeyboardDispatcher(GameWindow window) : base(window) { }
