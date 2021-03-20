@@ -26,7 +26,7 @@ Stardew64Installer is split into two parts: SDV.Installer and StardewValley.Patc
 
 Behind the scenes, CorFlags.exe is utilized to modify MONOMODDED_StardewValley.exe and [MonoMod](https://github.com/MonoMod/MonoMod) is used to patch StardewValley.exe.
 
-For the actual steps this program automates, see: [SMAPI Issue #767](https://github.com/Pathoschild/SMAPI/issues/767#issuecomment-799046253). (However, do note that CorFlags is used to modify MONOMODDED_StardewValley.exe, not Steamworks.NET.dll)
+For the actual steps this program automates, see: [SMAPI Issue #767](https://github.com/Pathoschild/SMAPI/issues/767#issuecomment-799046253). Also view the issue for a guide on how to install this for SMAPI.
 
 ### SDV.Installer
 SDV.Installer is a very simple command window program that asks the user for the directory of their Linux SDV installation and shows the user what's currently happening behind the scenes. Nothing fancy.
@@ -38,7 +38,7 @@ StardewValley.Patches.mm contains patches utilized by Stardew64Installer to allo
 Contributing is simple. I don't have a set style guide or any real guidelines to follow, just feel free to PR any changes you feel are fit to make and explain your reasoning as well. We'll discuss further once a PR is made (or you can contact me directly before-hand).
 
 ## SMAPI
-SMAPI is currently unsupport, however; support should be coming to SMAPI itself within this week (as of March 17th, 2021). It will change its installer to support Windows XNA and Windows with a Linux install. (See: https://gyazo.com/836b01128839e8d493282836c132ce1a.png)
+SMAPI installation details are located in [SMAPI Issue #767](https://github.com/Pathoschild/SMAPI/issues/767#issuecomment-799046253), but proper support is still being worked on.
 
 ## TODO
 - [ ] Automated Linux install through [DepotDownloader](https://github.com/SteamRE/DepotDownloader).
