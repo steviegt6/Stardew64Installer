@@ -42,5 +42,3 @@ SMAPI installation details are located in [SMAPI Issue #767](https://github.com/
 
 ## TODO
 - [ ] Automated Linux install through [DepotDownloader](https://github.com/SteamRE/DepotDownloader).
-- [ ] Remove the need to move \SDVLibs\ files into the main execution folder while keeping the source clean.
-- [ ] SMAPI support.
