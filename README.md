@@ -16,7 +16,7 @@ CorFlags.exe may also fail to modify MONOMODDED_StardewValley.exe. If this is th
 1. Open *SDV.Installer.exe*
 2. Confirm that you're "good to go!"
 3. Enter the directory of your Linux copy.
-4. Wait. (These's a hard-coded wait time once you reach the MonoMod patching step to allow time from MonoMod to write MONOMODDED_StardewValley.exe) (If it hangs there for over 15-30 seconds, try re-executing the program)
+4. Wait for the installer to finish.
 5. Launch *StardewValley.exe* in the depot-download folder, as it is now modified.
 
 Credit to [@Dradonhunter11](https://github.com/Dradonhunter11) for figuring out how to make SDV 64bit actually work. This program simply automates a majority of that process.
