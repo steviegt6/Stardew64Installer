@@ -13,16 +13,15 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="StardewValley" HintPath="..\StardewValley.Patches.mm\libs\StardewValley.exe" Private="False" />
-    <Reference Include="xTile" HintPath="libs\xTile.dll" Private="False" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\StardewValley.Patches.mm\StardewValley.Patches.mm.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Include="SDVLibs\*.dll" CopyToOutputDirectory="Always" />
-    <None Include="CorFlags.exe" CopyToOutputDirectory="Always" />
-  </ItemGroup>
+  <Target Name="CopyGameFiles" AfterTargets="AfterBuild">
+    <ItemGroup>
+      <GameFiles Include="..\libs\CopyToGameFolder\*.dll" />
+    </ItemGroup>
+
+    <Copy SourceFiles="..\libs\CorFlags.exe" DestinationFolder="$(OutDir)\libs" />
+    <Copy SourceFiles="@(GameFiles)" DestinationFolder="$(OutDir)\libs\CopyToGameFolder" />
+  </Target>
 </Project>
