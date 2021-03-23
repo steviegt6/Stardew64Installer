@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Threading;
 
 namespace SDV.Installer.Framework
@@ -31,6 +32,37 @@ namespace SDV.Installer.Framework
             while (File.Exists(file.FullName))
                 Thread.Sleep(100);
             return true;
+        }
+
+        /// <summary>Recursively copy a directory and wait until the copy operation complete.</summary>
+        /// <param name="source">The file or folder to copy.</param>
+        /// <param name="toPath">The absolute destination folder path.</param>
+        public static void RecursiveCopyTo(this DirectoryInfo source, string toPath)
+        {
+            // create target folder
+            DirectoryInfo targetFolder = new DirectoryInfo(toPath);
+            if (!targetFolder.Exists)
+                targetFolder.Create();
+
+            // copy entries
+            foreach (FileSystemInfo entry in source.GetFileSystemInfos())
+            {
+                string targetName = Path.Combine(targetFolder.FullName, entry.Name);
+
+                switch (entry)
+                {
+                    case FileInfo sourceFile:
+                        sourceFile.CopyToAndWait(targetName);
+                        break;
+
+                    case DirectoryInfo sourceDir:
+                        sourceDir.RecursiveCopyTo(targetName);
+                        break;
+
+                    default:
+                        throw new NotSupportedException($"Unknown filesystem info type '{source.GetType().FullName}'.");
+                }
+            }
         }
     }
 }
