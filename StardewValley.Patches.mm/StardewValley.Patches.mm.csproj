@@ -12,8 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="MonoGame.Framework" HintPath="libs\MonoGame.Framework.dll" />
-    <Reference Include="StardewValley" HintPath="libs\StardewValley.exe" />
-    <Reference Include="xTile" HintPath="libs\xTile.dll" />
+    <Reference Include="MonoGame.Framework" HintPath="..\libs\MonoGame.Framework.dll" Private="False" />
+    <Reference Include="StardewValley" HintPath="..\libs\StardewValley.exe" Private="False" />
   </ItemGroup>
 </Project>
