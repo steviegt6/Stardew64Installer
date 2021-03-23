@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -9,42 +10,8 @@ namespace SDV.Installer
 {
     public static class Program
     {
-        private static string ExePath =>
-            Path.GetDirectoryName(
-                Uri.UnescapeDataString(new UriBuilder(Assembly.GetExecutingAssembly().CodeBase).Path));
-
-        private static string LibPath => ExePath + Path.DirectorySeparatorChar + "SDVLibs";
-
-        // TODO: Figure out which DLLs are actually needed
-        private static readonly string[] DllsToCopy = {
-            "BmFont",
-            "GalaxyCSharp",
-            "libSkiaSharp",
-            "Lidgren.Network",
-            "Mono.Posix",
-            "Mono.Security",
-            "MonoGame.Framework",
-            "mscorlib",
-            "SDL2",
-            "SkiaSharp",
-            "soft_oal",
-            "StardewValley.GameData",
-            "steam_api64",
-            "Steamworks.NET",
-            "System.Configuration",
-            "System.Core",
-            "System.Data",
-            "System",
-            "System.Drawing",
-            "System.Runtime.Serialization",
-            "System.Security",
-            "System.Xml",
-            "System.Xml.Linq",
-            "WindowsBase",
-            "xTile",
-            "xTilePipeline",
-            "MonoMod.Utils"
-        };
+        private static readonly string ExePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+        private static readonly string CopyToGameFolderPath = Path.Combine(ExePath, "libs", "CopyToGameFolder");
 
         private static readonly string[] DirtyFiles = {
             "MONOMODDED_StardewValley.exe",
@@ -52,7 +19,7 @@ namespace SDV.Installer
             "StardewValley.exe"
         };
 
-        private const string CorFlagsArgs = "/C CorFlags.exe MONOMODDED_StardewValley.exe /32BITREQ-";
+        private const string CorFlagsArgs = "/C libs\\CorFlags.exe MONOMODDED_StardewValley.exe /32BITREQ-";
         private const string MonoModArgs = "/C MonoMod.exe StardewValley.exe";
         private const string ExeName = "StardewValley.exe";
         private const string ModifiedExeName = "MONOMODDED_" + ExeName;
@@ -119,7 +86,7 @@ namespace SDV.Installer
             string installationFolder = WriteReadLine("Please provide the location of the depot-downloaded copy of Stardew Valley:");
             Console.WriteLine();
 
-            CopyRequiredDLLs(installationFolder);
+            CopyRequiredDlls(installationFolder);
             ApplyMonoModPatches(installationFolder);
 
             Console.WriteLine();
@@ -140,25 +107,35 @@ namespace SDV.Installer
             return Console.ReadKey().Key.ToString();
         }
 
-        private static void CopyRequiredDLLs(string installPath)
+        private static void CopyRequiredDlls(string installPath)
         {
             Console.WriteLine("Copying required DLLs over to the installation location:");
 
-            foreach (string dllName in DllsToCopy)
+            List<string> waitForFiles = new List<string>();
+
+            // copy game DLLs into execution folder
+            foreach (FileInfo dll in new DirectoryInfo(installPath).GetFiles("*.dll"))
+            {
+                Console.WriteLine($" Copying {dll.Name} -> exec directory...");
+                File.Copy(dll.FullName, Path.Combine(ExePath, dll.Name), true);
+                waitForFiles.Add(Path.Combine(ExePath, dll.Name));
+            }
+
+            // copy files into game folder
+            foreach (FileInfo dll in new DirectoryInfo(CopyToGameFolderPath).GetFiles("*.dll"))
+            {
+                string dllName = dll.Name;
+
                 try
                 {
                     // TODO: Remove exec step
-                    Console.WriteLine($" Copying {dllName}.dll -> exec directory...");
-                    File.Copy(Path.Combine(LibPath, dllName + ".dll"), Path.Combine(ExePath, dllName + ".dll"), true);
+                    Console.WriteLine($" Copying {dllName} -> exec directory...");
+                    File.Copy(dll.FullName, Path.Combine(ExePath, dllName), true);
+                    waitForFiles.Add(Path.Combine(ExePath, dllName));
 
-                    Console.WriteLine($" Copying {dllName}.dll -> SDV directory...");
-                    File.Copy(Path.Combine(LibPath, dllName + ".dll"), Path.Combine(installPath, dllName + ".dll"), true);
-                }
-                catch (FileNotFoundException e)
-                {
-                    Console.WriteLine($"Could not locate file: {e.FileName}");
-                    Console.WriteLine("Falling back to previous prompt...");
-                    Continue();
+                    Console.WriteLine($" Copying {dllName} -> SDV directory...");
+                    File.Copy(dll.FullName, Path.Combine(installPath, dllName), true);
+                    waitForFiles.Add(Path.Combine(installPath, dllName));
                 }
                 catch (DirectoryNotFoundException e)
                 {
@@ -166,11 +143,14 @@ namespace SDV.Installer
                     Console.WriteLine("Falling back to previous prompt...");
                     Continue();
                 }
+            }
 
             // Is this separate loop required for waiting until all DLLs are copied?
-            foreach (string dllName in DllsToCopy)
-                while (!File.Exists(Path.Combine(installPath, dllName + ".dll")))
+            foreach (string path in waitForFiles)
+            {
+                while (!File.Exists(path))
                     Console.ReadLine();
+            }
 
             Console.WriteLine();
         }
@@ -204,33 +184,33 @@ namespace SDV.Installer
                 }
             }.Start();
 
-            RetryMMCopy:
-            try
+            while (true)
             {
-                // Give it some time, honestly
-                Thread.Sleep(1000 * 10);
-                Console.WriteLine("Modifying MONOMODDED_StardewValley.exe flags with CorFlags..." +
-                                  "\n(If this does not work, please re-launch with administrator privileges)");
-
-                new Process
+                try
                 {
-                    StartInfo = new ProcessStartInfo
+                    // Give it some time, honestly
+                    Thread.Sleep(1000 * 10);
+                    Console.WriteLine("Modifying MONOMODDED_StardewValley.exe flags with CorFlags...\n(If this does not work, please re-launch with administrator privileges)");
+
+                    new Process
                     {
-                        WindowStyle = ProcessWindowStyle.Hidden,
-                        FileName = "cmd.exe",
-                        Arguments = CorFlagsArgs
-                    }
-                }.Start();
+                        StartInfo = new ProcessStartInfo
+                        {
+                            WindowStyle = ProcessWindowStyle.Hidden,
+                            FileName = "cmd.exe",
+                            Arguments = CorFlagsArgs
+                        }
+                    }.Start();
 
-                Thread.Sleep(1000 * 5);
-                Console.WriteLine("Copying the modified EXE over to the installation location...");
-                File.Copy(Path.Combine(ExePath, ModifiedExeName), Path.Combine(installPath, ExeName), true);
-            }
-            catch (FileNotFoundException)
-            {
-                Console.WriteLine("File not found... retrying...");
-
-                goto RetryMMCopy;
+                    Thread.Sleep(1000 * 5);
+                    Console.WriteLine("Copying the modified EXE over to the installation location...");
+                    File.Copy(Path.Combine(ExePath, ModifiedExeName), Path.Combine(installPath, ExeName), true);
+                    break;
+                }
+                catch (FileNotFoundException)
+                {
+                    Console.WriteLine("File not found... retrying...");
+                }
             }
 
             Console.WriteLine("Copied the modified EXE over to the installation location!");
