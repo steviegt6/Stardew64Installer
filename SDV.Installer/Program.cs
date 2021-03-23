@@ -1,90 +1,44 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Threading;
+using SDV.Installer.Framework;
 
 namespace SDV.Installer
 {
     public static class Program
     {
-        private static string ExePath =>
-            Path.GetDirectoryName(
-                Uri.UnescapeDataString(new UriBuilder(Assembly.GetExecutingAssembly().CodeBase).Path));
+        /*********
+        ** Fields
+        *********/
+        private static readonly string ExePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+        private static readonly string CopyToGameFolderRelativePath = Path.Combine("libs", "CopyToGameFolder");
+        private static readonly string StagingPath = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N"));
 
-        private static string LibPath => ExePath + Path.DirectorySeparatorChar + "SDVLibs";
-
-        // TODO: Figure out which DLLs are actually needed
-        private static readonly List<string> dllsToCopy = new List<string>
-        {
-            "BmFont",
-            "GalaxyCSharp",
-            "libSkiaSharp",
-            "Lidgren.Network",
-            "Mono.Posix",
-            "Mono.Security",
-            "MonoGame.Framework",
-            "mscorlib",
-            "SDL2",
-            "SkiaSharp",
-            "soft_oal",
-            "StardewValley.GameData",
-            "steam_api64",
-            "Steamworks.NET",
-            "System.Configuration",
-            "System.Core",
-            "System.Data",
-            "System",
-            "System.Drawing",
-            "System.Runtime.Serialization",
-            "System.Security",
-            "System.Xml",
-            "System.Xml.Linq",
-            "WindowsBase",
-            "xTile",
-            "xTilePipeline",
-            "MonoMod.Utils"
-        };
-
-        private static readonly List<string> dirtyFiles = new List<string>
-        {
-            "MONOMODDED_StardewValley.exe",
-            "MONOMODDED_StardewValley.pdb",
-            "StardewValley.exe"
-        };
-
-        //private const string SteamworksDLLName = "Steamworks.NET.dll";
-        private const string CMDCorFlagsInfo = "/C CorFlags.exe MONOMODDED_StardewValley.exe /32BITREQ-";
-        private const string CMDMMInfo = "/C MonoMod.exe StardewValley.exe";
         private const string ExeName = "StardewValley.exe";
-        private const string MMExeName = "MONOMODDED_" + ExeName;
+        private const string ModifiedExeName = "MONOMODDED_" + ExeName;
 
-        private static void Main()
+
+        /*********
+        ** Public methods
+        *********/
+        public static void Main()
         {
-            Console.WriteLine("Cleaning out any potentially dirty files...");
-
-            foreach (string file in dirtyFiles.Where(file => File.Exists(Path.Combine(ExePath, file))))
-            {
-                File.Delete(Path.Combine(ExePath, file));
-                Console.WriteLine($"Deleted {file}!");
-            }
-
-            for (int i = 0; i < 2; i++) 
-                Console.WriteLine();
-
-            Console.WriteLine(" Welcome to the Stardew Valley 64bit patcher!");
-            Console.WriteLine("  Please note that this program requires a copy of the Linux version of Stardew Valley.");
-            Console.WriteLine("  You will have to install this manually through DepotDownloader.");
+            Console.WriteLine("Welcome to the Stardew Valley 64-bit patcher!");
+            Console.WriteLine(" Please note that this program requires a copy of the Linux version of Stardew Valley.");
+            Console.WriteLine(" You will have to install this manually through DepotDownloader.");
             Console.WriteLine();
             Prompt();
         }
 
+
+        /*********
+        ** Private methods
+        *********/
         private static void Prompt()
         {
-            string option = WriteReadLine(" [1] I don't have a copy of the Linux version!" + 
-                                          "\n [2] I'm good to go!");
+            string option = WriteReadLine("[1] I don't have a copy of the Linux version!\n[2] I'm good to go!");
 
             if (!int.TryParse(option, out int optionNum))
                 return;
@@ -112,160 +66,147 @@ namespace SDV.Installer
         {
             // TODO: Integrate this into this program... eventually?
             Console.WriteLine();
-            WriteReadKey(" Please download DepotDownloader through https://github.com/SteamRE/DepotDownloader" + 
-                         "\n Press any key to exit...");
+            Console.WriteLine("Please download DepotDownloader through https://github.com/SteamRE/DepotDownloader");
+            WriteReadKey("Press any key to exit...");
         }
 
         private static void Continue()
         {
             Console.WriteLine();
 
-            string installationFolder = WriteReadLine("Please provide the location of the depot-downloaded copy of Stardew Valley:");
+            string installPath = WriteReadLine("Please provide the location of the depot-downloaded copy of Stardew Valley:");
             Console.WriteLine();
 
-            CorFlagSteamworks(/*installationFolder*/);
-            CopyRequiredDLLs(installationFolder);
-            ApplyMonoModPatches(installationFolder);
+            DirectoryInfo installDir = new DirectoryInfo(installPath);
+            DirectoryInfo stagingDir = PrepareStagingFolder(installDir);
+            ApplyPatches(stagingDir);
+            InstallFiles(stagingDir, installDir);
 
-            Console.WriteLine();
-            WriteReadKey(" Installation complete! Please launch StardewValley.exe from the depot-download folder!" +
-                         "\n Press any key to exit...");
+            SetColor(ConsoleColor.Green, () =>
+                Console.WriteLine($"Installation complete! Please launch {ExeName} from the game folder.")
+            );
+            WriteReadKey("Press any key to exit...");
         }
 
         private static string WriteReadLine(string value)
         {
             Console.WriteLine(value);
-            // Console.WriteLine();
             return Console.ReadLine();
         }
 
-        // ReSharper disable once UnusedMethodReturnValue.Local
-        private static string WriteReadKey(string value)
+        private static void WriteReadKey(string value)
         {
             Console.WriteLine(value);
-            // Console.WriteLine();
-            return Console.ReadKey().Key.ToString();
+            Console.ReadKey();
         }
 
-        private static void CorFlagSteamworks(/*string installPath*/)
+        /// <summary>Create the staging folder with all the files needed to run the patcher.</summary>
+        /// <param name="installDir">The game install folder.</param>
+        private static DirectoryInfo PrepareStagingFolder(DirectoryInfo installDir)
         {
-            /*Console.WriteLine("Copying Steamworks.NET.dll to executable directory...");
-            string dllPath = Path.Combine(installPath, SteamworksDLLName);
-            string newPath = Path.Combine(ExePath, SteamworksDLLName);
+            Console.WriteLine($"Copying files to temporary folder ({StagingPath})...");
+            var stagingDir = new DirectoryInfo(StagingPath);
 
-            File.Copy(dllPath, newPath, true);
+            // copy installer files
+            new DirectoryInfo(ExePath).RecursiveCopyTo(stagingDir.FullName);
 
-            Console.WriteLine("Modifying Steamworks.NET.dll flags with CorFlags..." +
-                              "\n(If this does not work, please re-launch with administrator privileges)");
-            new Process
+            // copy game DLLs
+            foreach (FileInfo dll in installDir.GetFiles("*.dll"))
+                dll.CopyToAndWait(Path.Combine(stagingDir.FullName, dll.Name));
+
+            // copy game executable
             {
-                StartInfo = new ProcessStartInfo
+                FileInfo file = installDir.GetFiles(ExeName).FirstOrDefault();
+                if (file == null)
                 {
-                    WindowStyle = ProcessWindowStyle.Hidden, 
-                    FileName = "cmd.exe",
-                    Arguments = CMDCorFlagsInfo
+                    Console.WriteLine($"Could not locate {ExeName}");
+                    Console.WriteLine("Falling back to previous prompt...");
+                    Continue();
                 }
-            }.Start();
 
-            Console.WriteLine("Copying the modified Steamworks.NET.dll over to the installation location...");
-            File.Copy(newPath, dllPath, true);*/
+                file.CopyToAndWait(Path.Combine(stagingDir.FullName, ExeName));
+            }
+
+            // copy overwrite files
+            foreach (FileInfo dll in new DirectoryInfo(Path.Combine(ExePath, CopyToGameFolderRelativePath)).GetFiles("*.dll"))
+                dll.CopyToAndWait(Path.Combine(stagingDir.FullName, dll.Name));
+
+            Console.WriteLine();
+            return stagingDir;
         }
 
-        private static void CopyRequiredDLLs(string installPath)
+        /// <summary>Patch the files in the staging folder.</summary>
+        /// <param name="stagingDir">The staging folder to patch.</param>
+        private static void ApplyPatches(DirectoryInfo stagingDir)
         {
-            Console.WriteLine("Copying required DLLs over to the installation location:");
+            // apply MonoMod patches
+            Console.WriteLine("Applying MonoMod patches...");
+            RunCommand($"MonoMod.exe {ExeName}", workingPath: stagingDir.FullName);
+            Console.WriteLine();
 
-            foreach (string dllName in dllsToCopy)
-                try
-                {
-                    // TODO: Remove exec step
-                    Console.WriteLine($" Copying {dllName}.dll -> exec directory...");
-                    File.Copy(Path.Combine(LibPath, dllName + ".dll"), Path.Combine(ExePath, dllName + ".dll"), true);
-
-                    Console.WriteLine($" Copying {dllName}.dll -> SDV directory...");
-                    File.Copy(Path.Combine(LibPath, dllName + ".dll"), Path.Combine(installPath, dllName + ".dll"), true);
-                }
-                catch (FileNotFoundException e)
-                {
-                    Console.WriteLine($"Could not locate file: {e.FileName}");
-                    Console.WriteLine("Falling back to previous prompt...");
-                    Continue();
-                }
-                catch (DirectoryNotFoundException e)
-                {
-                    Console.WriteLine($"Could not locate directory: {e.Message}");
-                    Console.WriteLine("Falling back to previous prompt...");
-                    Continue();
-                }
-
-            // Is this separate loop required for waiting until all DLLs are copied?
-            foreach (string dllName in dllsToCopy)
-                while (!File.Exists(Path.Combine(installPath, dllName + ".dll")))
-                    Console.ReadLine();
-
+            // apply CorFlags
+            Console.WriteLine($"Patching {ModifiedExeName} flags with CorFlags... (If this doesn't work, please relaunch with administrator privileges.)");
+            RunCommand($"{Path.Combine("libs", "CorFlags.exe")} {ModifiedExeName} /32BITREQ-", workingPath: stagingDir.FullName);
             Console.WriteLine();
         }
 
-        private static void ApplyMonoModPatches(string installPath)
+        /// <summary>Copy the modified files into the game folder.</summary>
+        /// <param name="stagingDir">The staging folder which was patched.</param>
+        /// <param name="installDir">The game install folder.</param>
+        private static void InstallFiles(DirectoryInfo stagingDir, DirectoryInfo installDir)
         {
-            Console.WriteLine("Copying over StardewValley.exe to patch...");
-
-            try
+            // copy override files
+            Console.WriteLine("Copying override files...");
+            DirectoryInfo overridesFolder = new DirectoryInfo(Path.Combine(stagingDir.FullName, CopyToGameFolderRelativePath));
+            foreach (FileInfo dll in overridesFolder.GetFiles("*.dll"))
             {
-                File.Copy(Path.Combine(installPath, ExeName), Path.Combine(ExePath, ExeName), true);
-            }
-            catch (FileNotFoundException e)
-            {
-                Console.WriteLine($"Could not locate file: {e.FileName}");
-                Console.WriteLine("Falling back to previous prompt...");
-                Continue();
+                string dllName = dll.Name;
+                dll.CopyToAndWait(Path.Combine(installDir.FullName, dllName));
             }
 
-            while (!File.Exists(Path.Combine(ExePath, ExeName)))
-                Console.ReadLine();
+            // copy modified executable
+            Console.WriteLine("Copying patched executable...");
+            var file = new FileInfo(Path.Combine(stagingDir.FullName, ModifiedExeName));
+            file.CopyToAndWait(Path.Combine(installDir.FullName, ExeName));
+            Console.WriteLine();
+        }
 
-            Console.WriteLine("Applying MonoMod patches...");
-
-            new Process
+        /// <summary>Run a command through <c>cmd.exe</c> and wait for it to finish.</summary>
+        /// <param name="command">The command to run.</param>
+        /// <param name="workingPath">The absolute path to the working directory for the command, if any.</param>
+        private static void RunCommand(string command, string workingPath = null)
+        {
+            SetColor(ConsoleColor.DarkGray, () =>
             {
-                StartInfo = new ProcessStartInfo
+                var startInfo = new ProcessStartInfo
                 {
-                    //WindowStyle = ProcessWindowStyle.Hidden,
                     FileName = "cmd.exe",
-                    Arguments = CMDMMInfo
-                }
-            }.Start();
+                    Arguments = $"/C {command}",
+                    UseShellExecute = false // run within the same window
+                };
+                if (workingPath != null)
+                    startInfo.WorkingDirectory = workingPath;
 
-            RetryMMCopy:
+                var process = new Process { StartInfo = startInfo };
+                process.Start();
+                process.WaitForExit();
+            });
+        }
+
+        /// <summary>Write text with a given console color.</summary>
+        /// <param name="color">The color to set.</param>
+        /// <param name="action">The action which writes console text.</param>
+        private static void SetColor(ConsoleColor color, Action action)
+        {
+            Console.ForegroundColor = color;
             try
             {
-                // Give it some time, honestly
-                Thread.Sleep(1000 * 10);
-                Console.WriteLine("Modifying MONOMODDED_StardewValley.exe flags with CorFlags..." +
-                                  "\n(If this does not work, please re-launch with administrator privileges)");
-
-                new Process
-                {
-                    StartInfo = new ProcessStartInfo
-                    {
-                        WindowStyle = ProcessWindowStyle.Hidden,
-                        FileName = "cmd.exe",
-                        Arguments = CMDCorFlagsInfo
-                    }
-                }.Start();
-
-                Thread.Sleep(1000 * 5);
-                Console.WriteLine("Copying the modified EXE over to the installation location...");
-                File.Copy(Path.Combine(ExePath, MMExeName), Path.Combine(installPath, ExeName), true);
+                action();
             }
-            catch (FileNotFoundException)
+            finally
             {
-                Console.WriteLine("File not found... retrying...");
-
-                goto RetryMMCopy;
+                Console.ResetColor();
             }
-
-            Console.WriteLine("Copied the modified EXE over to the installation location!");
         }
     }
 }
