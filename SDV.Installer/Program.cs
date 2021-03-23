@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -17,8 +16,7 @@ namespace SDV.Installer
         private static string LibPath => ExePath + Path.DirectorySeparatorChar + "SDVLibs";
 
         // TODO: Figure out which DLLs are actually needed
-        private static readonly List<string> dllsToCopy = new List<string>
-        {
+        private static readonly string[] DllsToCopy = {
             "BmFont",
             "GalaxyCSharp",
             "libSkiaSharp",
@@ -48,30 +46,28 @@ namespace SDV.Installer
             "MonoMod.Utils"
         };
 
-        private static readonly List<string> dirtyFiles = new List<string>
-        {
+        private static readonly string[] DirtyFiles = {
             "MONOMODDED_StardewValley.exe",
             "MONOMODDED_StardewValley.pdb",
             "StardewValley.exe"
         };
 
-        //private const string SteamworksDLLName = "Steamworks.NET.dll";
-        private const string CMDCorFlagsInfo = "/C CorFlags.exe MONOMODDED_StardewValley.exe /32BITREQ-";
-        private const string CMDMMInfo = "/C MonoMod.exe StardewValley.exe";
+        private const string CorFlagsArgs = "/C CorFlags.exe MONOMODDED_StardewValley.exe /32BITREQ-";
+        private const string MonoModArgs = "/C MonoMod.exe StardewValley.exe";
         private const string ExeName = "StardewValley.exe";
-        private const string MMExeName = "MONOMODDED_" + ExeName;
+        private const string ModifiedExeName = "MONOMODDED_" + ExeName;
 
         private static void Main()
         {
             Console.WriteLine("Cleaning out any potentially dirty files...");
 
-            foreach (string file in dirtyFiles.Where(file => File.Exists(Path.Combine(ExePath, file))))
+            foreach (string file in DirtyFiles.Where(file => File.Exists(Path.Combine(ExePath, file))))
             {
                 File.Delete(Path.Combine(ExePath, file));
                 Console.WriteLine($"Deleted {file}!");
             }
 
-            for (int i = 0; i < 2; i++) 
+            for (int i = 0; i < 2; i++)
                 Console.WriteLine();
 
             Console.WriteLine(" Welcome to the Stardew Valley 64bit patcher!");
@@ -83,7 +79,7 @@ namespace SDV.Installer
 
         private static void Prompt()
         {
-            string option = WriteReadLine(" [1] I don't have a copy of the Linux version!" + 
+            string option = WriteReadLine(" [1] I don't have a copy of the Linux version!" +
                                           "\n [2] I'm good to go!");
 
             if (!int.TryParse(option, out int optionNum))
@@ -112,7 +108,7 @@ namespace SDV.Installer
         {
             // TODO: Integrate this into this program... eventually?
             Console.WriteLine();
-            WriteReadKey(" Please download DepotDownloader through https://github.com/SteamRE/DepotDownloader" + 
+            WriteReadKey(" Please download DepotDownloader through https://github.com/SteamRE/DepotDownloader" +
                          "\n Press any key to exit...");
         }
 
@@ -123,7 +119,6 @@ namespace SDV.Installer
             string installationFolder = WriteReadLine("Please provide the location of the depot-downloaded copy of Stardew Valley:");
             Console.WriteLine();
 
-            CorFlagSteamworks(/*installationFolder*/);
             CopyRequiredDLLs(installationFolder);
             ApplyMonoModPatches(installationFolder);
 
@@ -135,7 +130,6 @@ namespace SDV.Installer
         private static string WriteReadLine(string value)
         {
             Console.WriteLine(value);
-            // Console.WriteLine();
             return Console.ReadLine();
         }
 
@@ -143,39 +137,14 @@ namespace SDV.Installer
         private static string WriteReadKey(string value)
         {
             Console.WriteLine(value);
-            // Console.WriteLine();
             return Console.ReadKey().Key.ToString();
-        }
-
-        private static void CorFlagSteamworks(/*string installPath*/)
-        {
-            /*Console.WriteLine("Copying Steamworks.NET.dll to executable directory...");
-            string dllPath = Path.Combine(installPath, SteamworksDLLName);
-            string newPath = Path.Combine(ExePath, SteamworksDLLName);
-
-            File.Copy(dllPath, newPath, true);
-
-            Console.WriteLine("Modifying Steamworks.NET.dll flags with CorFlags..." +
-                              "\n(If this does not work, please re-launch with administrator privileges)");
-            new Process
-            {
-                StartInfo = new ProcessStartInfo
-                {
-                    WindowStyle = ProcessWindowStyle.Hidden, 
-                    FileName = "cmd.exe",
-                    Arguments = CMDCorFlagsInfo
-                }
-            }.Start();
-
-            Console.WriteLine("Copying the modified Steamworks.NET.dll over to the installation location...");
-            File.Copy(newPath, dllPath, true);*/
         }
 
         private static void CopyRequiredDLLs(string installPath)
         {
             Console.WriteLine("Copying required DLLs over to the installation location:");
 
-            foreach (string dllName in dllsToCopy)
+            foreach (string dllName in DllsToCopy)
                 try
                 {
                     // TODO: Remove exec step
@@ -199,7 +168,7 @@ namespace SDV.Installer
                 }
 
             // Is this separate loop required for waiting until all DLLs are copied?
-            foreach (string dllName in dllsToCopy)
+            foreach (string dllName in DllsToCopy)
                 while (!File.Exists(Path.Combine(installPath, dllName + ".dll")))
                     Console.ReadLine();
 
@@ -230,9 +199,8 @@ namespace SDV.Installer
             {
                 StartInfo = new ProcessStartInfo
                 {
-                    //WindowStyle = ProcessWindowStyle.Hidden,
                     FileName = "cmd.exe",
-                    Arguments = CMDMMInfo
+                    Arguments = MonoModArgs
                 }
             }.Start();
 
@@ -250,13 +218,13 @@ namespace SDV.Installer
                     {
                         WindowStyle = ProcessWindowStyle.Hidden,
                         FileName = "cmd.exe",
-                        Arguments = CMDCorFlagsInfo
+                        Arguments = CorFlagsArgs
                     }
                 }.Start();
 
                 Thread.Sleep(1000 * 5);
                 Console.WriteLine("Copying the modified EXE over to the installation location...");
-                File.Copy(Path.Combine(ExePath, MMExeName), Path.Combine(installPath, ExeName), true);
+                File.Copy(Path.Combine(ExePath, ModifiedExeName), Path.Combine(installPath, ExeName), true);
             }
             catch (FileNotFoundException)
             {
