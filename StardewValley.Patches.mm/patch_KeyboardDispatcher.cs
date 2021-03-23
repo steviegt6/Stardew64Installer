@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using MonoMod;
 using MonoMod.Utils;
+using StardewValley.Patches.mm.Framework;
 
 // ReSharper disable once CheckNamespace
 namespace StardewValley
@@ -14,15 +15,6 @@ namespace StardewValley
     [SuppressMessage("Style", "IDE1006:Naming Styles")]
     class patch_KeyboardDispatcher : KeyboardDispatcher
     {
-        [SuppressMessage("Style", "IDE1006:Naming Styles")]
-        public extern void orig_ctor(GameWindow window);
-
-        // ReSharper disable once ArrangeTypeMemberModifiers
-        const BindingFlags all = BindingFlags.NonPublic
-                                    | BindingFlags.Public
-                                    | BindingFlags.Instance
-                                    | BindingFlags.Static;
-
         [MonoModConstructor]
         [SuppressMessage("Style", "IDE1006:Naming Styles")]
         public void ctor(GameWindow window)
@@ -36,7 +28,7 @@ namespace StardewValley
 
             // https://stackoverflow.com/questions/1121441/addeventhandler-using-reflection
             // https://stackoverflow.com/questions/11120401/creating-delegate-from-methodinfo
-            EventInfo windowTextInput = typeof(GameWindow).GetEvent("TextInput", all);
+            EventInfo windowTextInput = PatchHelper.RequireEvent(typeof(GameWindow), "TextInput");
             Delegate handler = Delegate.CreateDelegate(windowTextInput.EventHandlerType, this, "Event_TextInput");
             windowTextInput.AddEventHandler(window, handler);
 
