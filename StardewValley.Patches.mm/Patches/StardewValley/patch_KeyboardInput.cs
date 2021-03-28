@@ -1,7 +1,7 @@
-﻿using Microsoft.Xna.Framework;
-using System;
+﻿using System;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using Microsoft.Xna.Framework;
 using StardewValley.Patches.mm.Framework;
 
 // ReSharper disable once CheckNamespace
