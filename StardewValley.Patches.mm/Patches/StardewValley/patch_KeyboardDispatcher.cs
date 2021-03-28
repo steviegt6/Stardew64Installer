@@ -12,6 +12,7 @@ using StardewValley.Patches.mm.Framework;
 namespace StardewValley
 {
     // ReSharper disable once ArrangeTypeModifiers
+    /// <summary>A MonoMod patch that reimplements the <see cref="KeyboardDispatcher"/> constructor to remove a Linux-only check around the <see cref="GameWindow.TextInput"/> event set, ensures that <see cref="KeyboardInput.Initialize"/> is called, and removes the unneeded <see cref="KeyboardInput.CharEntered"/> and <see cref="KeyboardInput.KeyDown"/> events.</summary>
     [SuppressMessage("Style", "IDE1006:Naming Styles")]
     class patch_KeyboardDispatcher : KeyboardDispatcher
     {

@@ -19,6 +19,9 @@ namespace SDV.Installer
         private const string ExeName = "StardewValley.exe";
         private const string ModifiedExeName = "MONOMODDED_" + ExeName;
 
+        private const string MonoGameDllName = "MonoGame.Framework.dll";
+        private const string ModifiedMonoGameDllName = "MONOMODDED_" + MonoGameDllName;
+
 
         /*********
         ** Public methods
@@ -140,8 +143,10 @@ namespace SDV.Installer
         private static void ApplyPatches(DirectoryInfo stagingDir)
         {
             // apply MonoMod patches
-            Console.WriteLine("Applying MonoMod patches...");
+            Console.WriteLine($"Applying MonoMod patches to {ExeName}...");
             RunCommand($"MonoMod.exe {ExeName}", workingPath: stagingDir.FullName);
+            Console.WriteLine($"Applying MonoMod patches to {MonoGameDllName}...");
+            RunCommand($"MonoMod.exe {MonoGameDllName}", workingPath: stagingDir.FullName);
             Console.WriteLine();
 
             // apply CorFlags
@@ -165,9 +170,19 @@ namespace SDV.Installer
             }
 
             // copy modified executable
-            Console.WriteLine("Copying patched executable...");
-            var file = new FileInfo(Path.Combine(stagingDir.FullName, ModifiedExeName));
-            file.CopyToAndWait(Path.Combine(installDir.FullName, ExeName));
+            Console.WriteLine($"Copying patched {ExeName}...");
+            {
+                var file = new FileInfo(Path.Combine(stagingDir.FullName, ModifiedExeName));
+                file.CopyToAndWait(Path.Combine(installDir.FullName, ExeName));
+            }
+
+            // copy modified MonoGame
+            Console.WriteLine($"Copying patched {MonoGameDllName}...");
+            {
+                var file = new FileInfo(Path.Combine(stagingDir.FullName, ModifiedMonoGameDllName));
+                file.CopyToAndWait(Path.Combine(installDir.FullName, MonoGameDllName));
+            }
+
             Console.WriteLine();
         }
 
