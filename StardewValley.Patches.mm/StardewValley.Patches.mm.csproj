@@ -2,7 +2,7 @@
   <PropertyGroup>
     <AssemblyName>StardewValley.Patches.mm</AssemblyName>
     <RootNamespace>StardewValley.Patches.mm</RootNamespace>
-    <Version>1.1.0</Version>
+    <Version>1.1.1</Version>
     <TargetFramework>net452</TargetFramework>
   </PropertyGroup>
 
