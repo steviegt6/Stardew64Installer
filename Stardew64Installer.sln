@@ -3,23 +3,38 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30204.135
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SDV.Installer", "SDV.Installer\SDV.Installer.csproj", "{2CEAFE8E-D16B-45E6-B030-FD4C5649804D}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StardewValley.Patches.mm", "StardewValley.Patches.mm\StardewValley.Patches.mm.csproj", "{8B39F142-D14A-47FE-99BE-610A522C6AE5}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{515D3464-66E1-458C-A1C5-25D2F627ED8E}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".root", ".root", "{515D3464-66E1-458C-A1C5-25D2F627ED8E}"
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
+		common.targets = common.targets
 		LICENSE = LICENSE
 		README.md = README.md
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Patches", "Patches", "{436CCCCD-DEF5-4482-B0E4-1AC92ED715E4}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MonoGame.Framework.Patches.mm", "MonoGame.Framework.Patches.mm\MonoGame.Framework.Patches.mm.csproj", "{2428C425-D344-4AE2-BE2C-0FF9EF612571}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Stardew64Installer", "Stardew64Installer\Stardew64Installer.csproj", "{2CEAFE8E-D16B-45E6-B030-FD4C5649804D}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Stardew64Installer.Framework", "Stardew64Installer.Framework\Stardew64Installer.Framework.shproj", "{2DB21B84-4024-452E-8FA4-6DEC1CD00A26}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StardewValley.Patches.mm", "StardewValley.Patches.mm\StardewValley.Patches.mm.csproj", "{8B39F142-D14A-47FE-99BE-610A522C6AE5}"
+EndProject
 Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		Stardew64Installer.Framework\Stardew64Installer.Framework.projitems*{2428c425-d344-4ae2-be2c-0ff9ef612571}*SharedItemsImports = 5
+		Stardew64Installer.Framework\Stardew64Installer.Framework.projitems*{8b39f142-d14a-47fe-99be-610a522c6ae5}*SharedItemsImports = 5
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2428C425-D344-4AE2-BE2C-0FF9EF612571}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2428C425-D344-4AE2-BE2C-0FF9EF612571}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2428C425-D344-4AE2-BE2C-0FF9EF612571}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2428C425-D344-4AE2-BE2C-0FF9EF612571}.Release|Any CPU.Build.0 = Release|Any CPU
 		{2CEAFE8E-D16B-45E6-B030-FD4C5649804D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{2CEAFE8E-D16B-45E6-B030-FD4C5649804D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2CEAFE8E-D16B-45E6-B030-FD4C5649804D}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -31,6 +46,11 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{2428C425-D344-4AE2-BE2C-0FF9EF612571} = {436CCCCD-DEF5-4482-B0E4-1AC92ED715E4}
+		{2DB21B84-4024-452E-8FA4-6DEC1CD00A26} = {436CCCCD-DEF5-4482-B0E4-1AC92ED715E4}
+		{8B39F142-D14A-47FE-99BE-610A522C6AE5} = {436CCCCD-DEF5-4482-B0E4-1AC92ED715E4}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {55141786-0D1A-4169-A6CF-3F482D221A59}

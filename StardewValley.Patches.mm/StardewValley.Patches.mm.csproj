@@ -1,9 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="..\common.targets" />
+
   <PropertyGroup>
     <AssemblyName>StardewValley.Patches.mm</AssemblyName>
-    <RootNamespace>StardewValley.Patches.mm</RootNamespace>
-    <Version>1.1.1</Version>
-    <TargetFramework>net452</TargetFramework>
+    <RootNamespace>Stardew64Installer.Patches.StardewValley</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
@@ -15,4 +15,6 @@
     <Reference Include="MonoGame.Framework" HintPath="..\libs\MonoGame.Framework.dll" Private="False" />
     <Reference Include="StardewValley" HintPath="..\libs\StardewValley.exe" Private="False" />
   </ItemGroup>
+
+  <Import Project="..\Stardew64Installer.Framework\Stardew64Installer.Framework.projitems" Label="Shared" />
 </Project>
