@@ -9,6 +9,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".root", ".root", "{515D3464
 		common.targets = common.targets
 		LICENSE = LICENSE
 		README.md = README.md
+		RELEASE-NOTES.md = RELEASE-NOTES.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Patches", "Patches", "{436CCCCD-DEF5-4482-B0E4-1AC92ED715E4}"

@@ -48,5 +48,7 @@ Contributing is simple. I don't have a set style guide or any real guidelines to
 to submit pull requests and explain your reasoning. We'll discuss further once a pull request is
 open (or you can contact me directly beforehand).
 
-Credit to [@Dradonhunter11](https://github.com/Dradonhunter11) for figuring out how to make Stardew
-Valley 64-bit actually work! This program automates that process.
+All contributors are credited in the release notes.
+
+## See also
+* [Release notes](RELEASE-NOTES.md)
