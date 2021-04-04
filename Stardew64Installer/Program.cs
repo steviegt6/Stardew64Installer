@@ -7,25 +7,35 @@ using Stardew64Installer.Framework;
 
 namespace Stardew64Installer
 {
+    /// <summary>The console app entry class.</summary>
     public static class Program
     {
         /*********
         ** Fields
         *********/
-        private static readonly string ExePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+        /// <summary>The absolute path to the installer folder.</summary>
+        private static readonly string InstallerPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+
+        /// <summary>The relative path within the installer and staging folders that contains DLLs to copy into the game folder.</summary>
         private static readonly string CopyToGameFolderRelativePath = Path.Combine("libs", "CopyToGameFolder");
+
+        /// <summary>The absolute path to a temporary one-use folder in which to store intermediate files during installation.</summary>
         private static readonly string StagingPath = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N"));
 
+        /// <summary>The original filename for the Stardew Valley executable.</summary>
         private const string ExeName = "StardewValley.exe";
-        private const string ModifiedExeName = "MONOMODDED_" + ExeName;
 
+        /// <summary>The original filename for the <c>MonoGame.Framework</c> DLL.</summary>
         private const string MonoGameDllName = "MonoGame.Framework.dll";
-        private const string ModifiedMonoGameDllName = "MONOMODDED_" + MonoGameDllName;
+
+        /// <summary>The filename prefix added by MonoMod to the modified version of an executable or DLL.</summary>
+        private const string MonoModdedPrefix = "MONOMODDED_";
 
 
         /*********
         ** Public methods
         *********/
+        /// <summary>The console app entry point.</summary>
         public static void Main()
         {
             Console.WriteLine("Welcome to the Stardew Valley 64-bit patcher!");
@@ -111,7 +121,7 @@ namespace Stardew64Installer
             var stagingDir = new DirectoryInfo(StagingPath);
 
             // copy installer files
-            new DirectoryInfo(ExePath).RecursiveCopyTo(stagingDir.FullName);
+            new DirectoryInfo(InstallerPath).RecursiveCopyTo(stagingDir.FullName);
 
             // copy game DLLs
             foreach (FileInfo dll in installDir.GetFiles("*.dll"))
@@ -131,7 +141,7 @@ namespace Stardew64Installer
             }
 
             // copy overwrite files
-            foreach (FileInfo dll in new DirectoryInfo(Path.Combine(ExePath, CopyToGameFolderRelativePath)).GetFiles("*.dll"))
+            foreach (FileInfo dll in new DirectoryInfo(Path.Combine(InstallerPath, CopyToGameFolderRelativePath)).GetFiles("*.dll"))
                 dll.CopyToAndWait(Path.Combine(stagingDir.FullName, dll.Name));
 
             Console.WriteLine();
@@ -150,8 +160,9 @@ namespace Stardew64Installer
             Console.WriteLine();
 
             // apply CorFlags
-            Console.WriteLine($"Patching {ModifiedExeName} flags with CorFlags... (If this doesn't work, please relaunch with administrator privileges.)");
-            RunCommand($"{Path.Combine("libs", "CorFlags.exe")} {ModifiedExeName} /32BITREQ-", workingPath: stagingDir.FullName);
+            string modifiedExeName = MonoModdedPrefix + ExeName;
+            Console.WriteLine($"Patching {modifiedExeName} flags with CorFlags... (If this doesn't work, please relaunch with administrator privileges.)");
+            RunCommand($"{Path.Combine("libs", "CorFlags.exe")} {modifiedExeName} /32BITREQ-", workingPath: stagingDir.FullName);
             Console.WriteLine();
         }
 
@@ -172,14 +183,14 @@ namespace Stardew64Installer
             // copy modified executable
             Console.WriteLine($"Copying patched {ExeName}...");
             {
-                var file = new FileInfo(Path.Combine(stagingDir.FullName, ModifiedExeName));
+                var file = new FileInfo(Path.Combine(stagingDir.FullName, MonoModdedPrefix + ExeName));
                 file.CopyToAndWait(Path.Combine(installDir.FullName, ExeName));
             }
 
             // copy modified MonoGame
             Console.WriteLine($"Copying patched {MonoGameDllName}...");
             {
-                var file = new FileInfo(Path.Combine(stagingDir.FullName, ModifiedMonoGameDllName));
+                var file = new FileInfo(Path.Combine(stagingDir.FullName, MonoModdedPrefix + MonoGameDllName));
                 file.CopyToAndWait(Path.Combine(installDir.FullName, MonoGameDllName));
             }
 

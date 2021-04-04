@@ -9,6 +9,7 @@
     <Import_RootNamespace>Stardew64Installer.Framework</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)FileUtilities.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)PatchHelper.cs" />
   </ItemGroup>
 </Project>

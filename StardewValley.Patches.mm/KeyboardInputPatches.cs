@@ -3,10 +3,9 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using Microsoft.Xna.Framework;
 using MonoMod;
-using Stardew64Installer.Shared;
+using Stardew64Installer.Framework;
 using StardewValley;
 
-// ReSharper disable once CheckNamespace
 namespace Stardew64Installer.Patches.StardewValley
 {
     /// <summary>A MonoMod patch that swaps 'SetWindowLong' (which is 32-bit only) to 'SetWindowLongPtr'.</summary>

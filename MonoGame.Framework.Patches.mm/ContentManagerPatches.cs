@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using System.Reflection;
 using Microsoft.Xna.Framework.Content;
 using MonoMod;
-using Stardew64Installer.Shared;
+using Stardew64Installer.Framework;
 
-// ReSharper disable once CheckNamespace
 namespace Stardew64Installer.Patches.MonoGameFramework
 {
     /// <summary>Patches <see cref="ContentManager.Load{T}"/> to normalize assets in the Windows format.</summary>

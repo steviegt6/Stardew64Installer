@@ -1,7 +1,7 @@
 ﻿← [README](README.md)
 
 ## Upcoming release
-* Fixed more errors due to inconsistent asset key normalization (thanks to Pathoschild!).
+* Fixed `MonoGame.Framework` patches not being applied (thanks to Pathoschild!).
 * Internal refactoring (thanks to Pathoschild!).
 
 ## 1.1.1
@@ -13,13 +13,12 @@ Released 27 March 2021.
 Released 23 March 2021.
 
 * Improved error-handling.
-* Removed an unneeded `if` check in `KeyboardDispatcher` (thanks to Mellozx and Dradonhunter11!).
-* Heavily reduced the number of bundled DLLs (thanks to Pathoschild!).
 * Improved installer speed by replacing forced wait times with checked operations (thanks to Pathoschild!).
 * The installer now uses a temporary folder instead of directly changing the installer folder (thanks to Pathoschild!).
+* The installer now shows `MonoMod` and `CorFlags` output directly for easier troubleshooting (thanks to Pathoschild!).
+* Heavily reduced the number of bundled and overwritten DLLs (thanks to Pathoschild!).
+* Removed an unneeded `if` check in `KeyboardDispatcher` (thanks to Mellozx and Dradonhunter11!).
 * Fixed pointer overflow error in `KeyboardInput` initialization (thanks to Pathoschild!).
-* Beautified the installer (thanks to Pathoschild!).
-* `MonoMod` and `CorFlags` now log directly to the installer window for easier troubleshooting (thanks to Pathoschild!).
 * Internal refactoring (thanks to Pathoschild!).
 
 ## 1.0.1

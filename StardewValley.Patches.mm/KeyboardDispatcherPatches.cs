@@ -6,10 +6,9 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using MonoMod;
 using MonoMod.Utils;
-using Stardew64Installer.Shared;
+using Stardew64Installer.Framework;
 using StardewValley;
 
-// ReSharper disable once CheckNamespace
 namespace Stardew64Installer.Patches.StardewValley
 {
     /// <summary>A MonoMod patch that reimplements the <see cref="KeyboardDispatcher"/> constructor to remove a Linux-only check around the <see cref="GameWindow.TextInput"/> event set, ensures that <see cref="KeyboardInput.Initialize"/> is called, and removes the unneeded <see cref="KeyboardInput.CharEntered"/> and <see cref="KeyboardInput.KeyDown"/> events.</summary>
@@ -37,7 +36,7 @@ namespace Stardew64Installer.Patches.StardewValley
         }
 
         /// <inheritdoc />
-        public KeyboardDispatcherPatches(GameWindow window) 
+        public KeyboardDispatcherPatches(GameWindow window)
             : base(window) { }
     }
 }

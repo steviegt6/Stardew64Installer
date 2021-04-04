@@ -25,4 +25,6 @@
     <Copy SourceFiles="..\libs\CorFlags.exe" DestinationFolder="$(OutDir)\libs" />
     <Copy SourceFiles="@(GameFiles)" DestinationFolder="$(OutDir)\libs\CopyToGameFolder" />
   </Target>
+
+  <Import Project="..\Stardew64Installer.Framework\Stardew64Installer.Framework.projitems" Label="Shared" />
 </Project>
