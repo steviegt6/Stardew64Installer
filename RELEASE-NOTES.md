@@ -1,6 +1,6 @@
 ﻿← [README](README.md)
 
-## Upcoming release
+## 1.1.2
 * Fixed `MonoGame.Framework` patches not being applied (thanks to Pathoschild!).
 * Internal refactoring (thanks to Pathoschild!).
 
