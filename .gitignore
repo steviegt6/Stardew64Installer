@@ -22,5 +22,5 @@ _ReSharper*/
 .idea/
 
 # Custom
-*/StardewValley.exe
+StardewValley.exe
 packages/*
