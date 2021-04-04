@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Reflection;
 
-namespace Stardew64Installer.Shared
+namespace Stardew64Installer.Framework
 {
     /// <summary>Provides utility methods to simplify patches.</summary>
     internal static class PatchHelper
