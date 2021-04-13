@@ -1,6 +1,12 @@
 ﻿← [README](README.md)
 
+## Upcoming release
+* Improved error-handling for game path (thanks to Pathoschild!).
+* Fixed issue where a failed install would ask for a new game path, install to that folder, then try to resume the previous failed install (thanks to Pathoschild!).
+
 ## 1.1.2
+Released 03 April 2021.
+
 * Fixed `MonoGame.Framework` patches not being applied (thanks to Pathoschild!).
 * Internal refactoring (thanks to Pathoschild!).
 
