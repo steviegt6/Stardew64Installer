@@ -2,5 +2,6 @@
   <PropertyGroup>
     <Version>1.1.2</Version>
     <TargetFramework>net452</TargetFramework>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
 </Project>
