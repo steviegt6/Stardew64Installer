@@ -2,6 +2,7 @@
 
 ## Upcoming release
 * Added support for patching the same game folder more than once (thanks to Pathoschild!).
+* Added `Game1.Stardew64InstallerVersion` field so SMAPI can log the patch tool version (thanks to Pathoschild!).
 * Improved error-handling for game path (thanks to Pathoschild!).
 * Fixed issue where a failed install would ask for a new game path, install to that folder, then try to resume the previous failed install (thanks to Pathoschild!).
 
