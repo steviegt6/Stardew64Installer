@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Reflection;
+using Mono.Cecil;
 using Stardew64Installer.Framework;
 
 namespace Stardew64Installer
@@ -31,6 +31,9 @@ namespace Stardew64Installer
         /// <summary>The filename prefix added by MonoMod to the modified version of an executable or DLL.</summary>
         private const string MonoModdedPrefix = "MONOMODDED_";
 
+        /// <summary>The filename suffix added to backup files.</summary>
+        private const string BackupSuffix = ".original";
+
 
         /*********
         ** Public methods
@@ -51,74 +54,95 @@ namespace Stardew64Installer
         *********/
         private static void Prompt()
         {
-            string option = WriteReadLine("[1] I don't have a copy of the Linux version!\n[2] I'm good to go!");
-
-            if (!int.TryParse(option, out int optionNum))
-                return;
-
-            if (optionNum < 1 || optionNum > 2)
+            while (true)
             {
-                ParseFailure();
-                return;
+                string option = WriteReadLine("[1] I don't have a copy of the Linux version!\n[2] I'm good to go!").Trim();
+
+                if (option == "1")
+                {
+                    // TODO: Integrate this into this program... eventually?
+                    Console.WriteLine();
+                    Console.WriteLine("Please download DepotDownloader through https://github.com/SteamRE/DepotDownloader");
+                    WriteReadKey("Press any key to exit...");
+                    break;
+                }
+                if (option == "2")
+                {
+                    Install();
+                    break;
+                }
+
+                Console.WriteLine();
+                Console.WriteLine("We failed to parse your response. Please choose a number between 1 and 2.");
+            }
+        }
+
+        /// <summary>Interactively install to the game folder.</summary>
+        private static void Install()
+        {
+            while (true)
+            {
+                // get install path
+                Console.WriteLine();
+                string installPath = WriteReadLine("Please provide the location of the depot-downloaded copy of Stardew Valley:");
+                if (string.IsNullOrWhiteSpace(installPath))
+                    continue;
+
+                // get directory
+                DirectoryInfo installDir;
+                try
+                {
+                    installDir = new DirectoryInfo(installPath);
+                }
+                catch (Exception ex)
+                {
+                    LogError($"Could not access that folder: {ex.Message}");
+                    continue;
+                }
+                if (!installDir.Exists)
+                {
+                    LogError("That folder doesn't seem to exist.");
+                    continue;
+                }
+
+                // install
+                Console.WriteLine();
+                bool installed =
+                    TryPrepareStagingFolder(installDir, out DirectoryInfo stagingDir)
+                    && TryApplyPatches(stagingDir)
+                    && TryInstallFiles(stagingDir, installDir);
+
+                if (installed)
+                    break;
             }
 
-            if (optionNum == 1)
-                DepotDownloadMessage();
-            else
-                Continue();
-        }
-
-        private static void ParseFailure()
-        {
-            Console.WriteLine();
-            Console.WriteLine("We failed to parse your response. Please choose a number between 1 and 2.");
-            Prompt();
-        }
-
-        private static void DepotDownloadMessage()
-        {
-            // TODO: Integrate this into this program... eventually?
-            Console.WriteLine();
-            Console.WriteLine("Please download DepotDownloader through https://github.com/SteamRE/DepotDownloader");
+            SetColor(ConsoleColor.Green, () => Console.WriteLine($"Installation complete! Please launch {ExeName} from the game folder."));
             WriteReadKey("Press any key to exit...");
         }
 
-        private static void Continue()
+        /// <summary>Write a message and wait for the user to hit enter.</summary>
+        /// <param name="message">The message to log.</param>
+        private static string WriteReadLine(string message)
         {
-            Console.WriteLine();
-
-            string installPath = WriteReadLine("Please provide the location of the depot-downloaded copy of Stardew Valley:");
-            Console.WriteLine();
-
-            DirectoryInfo installDir = new DirectoryInfo(installPath);
-            DirectoryInfo stagingDir = PrepareStagingFolder(installDir);
-            ApplyPatches(stagingDir);
-            InstallFiles(stagingDir, installDir);
-
-            SetColor(ConsoleColor.Green, () =>
-                Console.WriteLine($"Installation complete! Please launch {ExeName} from the game folder.")
-            );
-            WriteReadKey("Press any key to exit...");
-        }
-
-        private static string WriteReadLine(string value)
-        {
-            Console.WriteLine(value);
+            Console.WriteLine(message);
             return Console.ReadLine();
         }
 
-        private static void WriteReadKey(string value)
+        /// <summary>Write a message and wait for the user to press any key.</summary>
+        /// <param name="message">The message to log.</param>
+        private static void WriteReadKey(string message)
         {
-            Console.WriteLine(value);
+            Console.WriteLine(message);
             Console.ReadKey();
         }
 
         /// <summary>Create the staging folder with all the files needed to run the patcher.</summary>
         /// <param name="installDir">The game install folder.</param>
-        private static DirectoryInfo PrepareStagingFolder(DirectoryInfo installDir)
+        /// <param name="stagingDir">The staging folder to patch.</param>
+        private static bool TryPrepareStagingFolder(DirectoryInfo installDir, out DirectoryInfo stagingDir)
         {
             Console.WriteLine($"Copying files to temporary folder ({StagingPath})...");
-            var stagingDir = new DirectoryInfo(StagingPath);
+            stagingDir = new DirectoryInfo(StagingPath);
 
             // copy installer files
             new DirectoryInfo(InstallerPath).RecursiveCopyTo(stagingDir.FullName);
@@ -127,17 +151,22 @@ namespace Stardew64Installer
             foreach (FileInfo dll in installDir.GetFiles("*.dll"))
                 dll.CopyToAndWait(Path.Combine(stagingDir.FullName, dll.Name));
 
-            // copy game executable
+            // copy executable
+            if (TryGetMonoModOriginal(installDir, ExeName, out FileInfo exeFile, out string error))
+                exeFile.CopyToAndWait(Path.Combine(stagingDir.FullName, ExeName));
+            else
             {
-                FileInfo file = installDir.GetFiles(ExeName).FirstOrDefault();
-                if (file == null)
-                {
-                    Console.WriteLine($"Could not locate {ExeName}");
-                    Console.WriteLine("Falling back to previous prompt...");
-                    Continue();
-                }
+                LogError(error);
+                return false;
+            }
 
-                file.CopyToAndWait(Path.Combine(stagingDir.FullName, ExeName));
+            // copy MonoGame DLL
+            if (TryGetMonoModOriginal(installDir, MonoGameDllName, out FileInfo monogameFile, out error))
+                monogameFile.CopyToAndWait(Path.Combine(stagingDir.FullName, MonoGameDllName));
+            else
+            {
+                LogError(error);
+                return false;
             }
 
             // copy overwrite files
@@ -145,12 +174,12 @@ namespace Stardew64Installer
                 dll.CopyToAndWait(Path.Combine(stagingDir.FullName, dll.Name));
 
             Console.WriteLine();
-            return stagingDir;
+            return true;
         }
 
         /// <summary>Patch the files in the staging folder.</summary>
         /// <param name="stagingDir">The staging folder to patch.</param>
-        private static void ApplyPatches(DirectoryInfo stagingDir)
+        private static bool TryApplyPatches(DirectoryInfo stagingDir)
         {
             // apply MonoMod patches
             Console.WriteLine($"Applying MonoMod patches to {ExeName}...");
@@ -164,12 +193,14 @@ namespace Stardew64Installer
             Console.WriteLine($"Patching {modifiedExeName} flags with CorFlags... (If this doesn't work, please relaunch with administrator privileges.)");
             RunCommand($"{Path.Combine("libs", "CorFlags.exe")} {modifiedExeName} /32BITREQ-", workingPath: stagingDir.FullName);
             Console.WriteLine();
+
+            return true;
         }
 
         /// <summary>Copy the modified files into the game folder.</summary>
         /// <param name="stagingDir">The staging folder which was patched.</param>
         /// <param name="installDir">The game install folder.</param>
-        private static void InstallFiles(DirectoryInfo stagingDir, DirectoryInfo installDir)
+        private static bool TryInstallFiles(DirectoryInfo stagingDir, DirectoryInfo installDir)
         {
             // copy override files
             Console.WriteLine("Copying override files...");
@@ -183,18 +214,71 @@ namespace Stardew64Installer
             // copy modified executable
             Console.WriteLine($"Copying patched {ExeName}...");
             {
-                var file = new FileInfo(Path.Combine(stagingDir.FullName, MonoModdedPrefix + ExeName));
-                file.CopyToAndWait(Path.Combine(installDir.FullName, ExeName));
+                var original = new FileInfo(Path.Combine(stagingDir.FullName, ExeName));
+                var patched = new FileInfo(Path.Combine(stagingDir.FullName, MonoModdedPrefix + ExeName));
+
+                original.CopyToAndWait(Path.Combine(installDir.FullName, ExeName + BackupSuffix));
+                patched.CopyToAndWait(Path.Combine(installDir.FullName, ExeName));
             }
 
             // copy modified MonoGame
             Console.WriteLine($"Copying patched {MonoGameDllName}...");
             {
-                var file = new FileInfo(Path.Combine(stagingDir.FullName, MonoModdedPrefix + MonoGameDllName));
-                file.CopyToAndWait(Path.Combine(installDir.FullName, MonoGameDllName));
+                var original = new FileInfo(Path.Combine(stagingDir.FullName, MonoGameDllName));
+                var patched = new FileInfo(Path.Combine(stagingDir.FullName, MonoModdedPrefix + MonoGameDllName));
+
+                original.CopyToAndWait(Path.Combine(installDir.FullName, MonoGameDllName + BackupSuffix));
+                patched.CopyToAndWait(Path.Combine(installDir.FullName, MonoGameDllName));
             }
 
             Console.WriteLine();
+            return true;
+        }
+
+        /// <summary>Try to get the original version of a file without MonoMod patches.</summary>
+        /// <param name="gameDir">The game install folder.</param>
+        /// <param name="filename">The original filename.</param>
+        /// <param name="file">The file found, if any.</param>
+        /// <param name="error">An error message indicating why the file couldn't be found, if applicable.</param>
+        /// <returns>Returns whether the file was found.</returns>
+        private static bool TryGetMonoModOriginal(DirectoryInfo gameDir, string filename, out FileInfo file, out string error)
+        {
+            // get base file
+            file = new FileInfo(Path.Combine(gameDir.FullName, filename));
+            if (!file.Exists)
+            {
+                error = $"Couldn't find {file.Name} in the game folder.";
+                return false;
+            }
+            if (!IsMonoModded(file.FullName))
+            {
+                error = null;
+                return true;
+            }
+
+            // get MonoMod backup
+            file = new FileInfo(Path.Combine(gameDir.FullName, filename + BackupSuffix));
+            if (!file.Exists)
+            {
+                error = $"The patch tool was previously applied to this game folder, but no backup of the original {filename} file exists. Please delete and reinstall the game to fix this.";
+                return false;
+            }
+
+            error = null;
+            return true;
+        }
+
+        /// <summary>Get whether an assembly has been patched by MonoMod.</summary>
+        /// <param name="path">The assembly file path to check.</param>
+        private static bool IsMonoModded(string path)
+        {
+            // read assembly
+            byte[] assemblyBytes = File.ReadAllBytes(path);
+            using Stream readStream = new MemoryStream(assemblyBytes);
+            using AssemblyDefinition assembly = AssemblyDefinition.ReadAssembly(readStream, new ReaderParameters(ReadingMode.Immediate) { InMemory = true });
+
+            // check for MonoMod marker
+            return assembly.MainModule.GetType("MonoMod.WasHere") != null;
         }
 
         /// <summary>Run a command through <c>cmd.exe</c> and wait for it to finish.</summary>
@@ -217,6 +301,13 @@ namespace Stardew64Installer
                 process.Start();
                 process.WaitForExit();
             });
+        }
+
+        /// <summary>Write an error message to the console.</summary>
+        /// <param name="text">The message to write.</param>
+        private static void LogError(string text)
+        {
+            SetColor(ConsoleColor.Red, () => Console.WriteLine(text));
         }
 
         /// <summary>Write text with a given console color.</summary>
