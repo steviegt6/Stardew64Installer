@@ -1,6 +1,8 @@
 ﻿← [README](README.md)
 
-## Upcoming release
+## 1.1.3
+Released 14 April 2021.
+
 * Added support for patching the same game folder more than once (thanks to Pathoschild!).
 * Added `Game1.Stardew64InstallerVersion` field so SMAPI can log the patch tool version (thanks to Pathoschild!).
 * Improved error-handling for game path (thanks to Pathoschild!).

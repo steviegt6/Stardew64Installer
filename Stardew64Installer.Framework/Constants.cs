@@ -4,6 +4,6 @@
     public static class Constants
     {
         /// <summary>The version of this patch tool.</summary>
-        public static string Stardew64InstallerVersion { get; } = "1.1.2";
+        public static string Stardew64InstallerVersion { get; } = "1.1.3";
     }
 }
