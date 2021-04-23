@@ -1,5 +1,8 @@
 ﻿← [README](README.md)
 
+## Upcoming release
+* Removed `MonoMod.Utils.dll` dependency added to game folder (thanks to Pathoschild!).
+
 ## 1.1.3
 Released 14 April 2021.
 

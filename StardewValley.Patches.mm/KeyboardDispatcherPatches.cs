@@ -5,7 +5,6 @@ using System.Reflection;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using MonoMod;
-using MonoMod.Utils;
 using Stardew64Installer.Framework;
 using StardewValley;
 
@@ -24,7 +23,7 @@ namespace Stardew64Installer.Patches.StardewValley
             _charsEntered = new List<char>();
             _window = window;
 
-            new DynData<KeyboardDispatcher>(this).Set("pastedResult", "");
+            PatchHelper.RequireField(typeof(KeyboardDispatcherPatches), "_pasteResult").SetValue(this, "");
 
             // https://stackoverflow.com/questions/1121441/addeventhandler-using-reflection
             // https://stackoverflow.com/questions/11120401/creating-delegate-from-methodinfo
