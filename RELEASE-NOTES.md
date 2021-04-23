@@ -1,6 +1,8 @@
 ﻿← [README](README.md)
 
-## Upcoming release
+## 1.1.4
+Released 22 April 2021.
+
 * Added the version number to the installer window title to simplify troubleshooting (thanks to Pathoschild!).
 * Fixed errors initializing the GOG Galaxy and Steam SDKs (thanks to Pathoschild!).
 * Removed the `MonoMod.Utils.dll` dependency added to the game folder (thanks to Pathoschild!).
