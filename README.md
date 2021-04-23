@@ -53,9 +53,10 @@ folder to fix 64-bit compatibility:
 
 file | description
 ---- | -----------
-`Galaxy64.dll`<br />`GalaxyCSharp.dll`<br />`GalaxyCSharpGlue.dll` | New files (except `GalaxyCSharp.dll` which replaces a 32-bit version in the game folder). These are the 64-bit [GOG Galaxy SDK](https://docs.gog.com/sdk/).
-`SDL2.dll`<br />`soft_oal.dll` | New files. These are [Simple DirectMedia Layer](https://www.libsdl.org/) and [OpenAL](https://openal.org/), audio dependencies used by the game and needed to run the Linux version on Windows.
-`steam_api64.dll`<br />`Steamworks.NET.dll` | These replace 32-bit versions in the game folder. These are the latest 64-bit Windows [Steamworks.NET](https://github.com/rlabrecque/Steamworks.NET) release.
+`Galaxy64.dll`<br />`GalaxyCSharp.dll`<br />`GalaxyCSharpGlue.dll` | The 64-bit [GOG Galaxy SDK](https://docs.gog.com/sdk/). `GalaxyCSharp.dll` replaces a 32-bit version, and the others are added to support it.
+`libSkiaSharp.dll` | The [SkiaSharp](https://github.com/mono/SkiaSharp) 2D graphics library. This replaces a 32-bit version in the game folder. Taken from the [2.80.2 NuGet package](https://www.nuget.org/packages/SkiaSharp) (`runtimes/win-x64/native/libSkiaSharp.dll`).
+`SDL2.dll`<br />`soft_oal.dll` | These are [Simple DirectMedia Layer](https://www.libsdl.org/) and [OpenAL](https://openal.org/), audio dependencies used by the game and needed to run the Linux version on Windows. Added files (they'd normally be provided by the OS).
+`steam_api64.dll`<br />`Steamworks.NET.dll` | The 64-bit Windows [Steamworks.NET](https://github.com/rlabrecque/Steamworks.NET). These replace 32-bit versions in the game folder. Taken from the [15.0.0 release](https://github.com/rlabrecque/Steamworks.NET/releases).
 
 ### Contributing
 Contributing is simple. I don't have a set style guide or any real guidelines to follow, feel free

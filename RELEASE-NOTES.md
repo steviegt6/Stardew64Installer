@@ -1,5 +1,8 @@
 ﻿← [README](README.md)
 
+## Upcoming release
+* Fixed `libSkiaSharp` error when taking in-game screenshots (thanks to Pathoschild!).
+
 ## 1.1.4
 Released 22 April 2021.
 
