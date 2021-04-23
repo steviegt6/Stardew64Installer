@@ -8,32 +8,25 @@ Follow these instructions closely! This needs a special version of the game.
 1. Update all your mods to their latest versions. (Newer versions may add 64-bit support.)
 2. Download the Linux version of the game:
    1. Go to `steam://nav/console` in your browser to open the Steam console.
-   2. Run this command:
-      ```
-      download_depot 413150 413153
-      ```
+   2. Run this command: `download_depot 413150 413153`
    3. Wait for the download to finish. This may take a long time and won't show any download
       progress. Eventually the console will say
       "Depot download complete" and show the downloaded folder path.
-   4. Make a backup of the downloaded folder! You'll need a clean copy of the game if you need to
-      reapply the patch tool.
-   5. **For the rest of the instructions, "depot folder" means this downloaded folder.**
+   4. **For the rest of the instructions, "depot folder" means this downloaded folder.**
 3. Make Stardew Valley 64-bit:
    1. Download and unzip [Stardew64Installer from the releases page](https://github.com/Steviegt6/Stardew64Installer/releases).
-   2. Double-click the `Stardew64Installer.exe` file.
-   3. When it asks, paste the full path to the depot folder.
-   4. Wait for it to say "Installation complete!".
+   2. Double-click `Stardew64Installer.exe` and follow the on-screen instructions.
 4. Install SMAPI 64-bit:
-   1. ~~Download and unzip the [64-bit version of SMAPI](https://smapi.io/).~~  
-      ***Note:*** 64-bit SMAPI is in development and not publicly available yet.
-   2. Copy the files into the depot folder, so `StardewModdingAPI.exe` is in the same folder as
-      `StardewValley.exe`. (There's no installer currently.)
-5. Run `StardewModdingAPI.exe` in the depot folder and it should be 64-bit!
+   1. ~~Download and unzip [SMAPI 3.9.6 or later](https://smapi.io/).~~  
+      ***Note:*** 64-bit SMAPI is not released yet.
+   2. Run the SMAPI installer to install it (it will detect 64-bit mode automatically).  
+      _Tip: if it chooses a different game folder, rename the detected folder temporarily and try
+      it again; the installer should then ask for the game path._
+5. Run `StardewModdingAPI.exe` in the depot folder and the game should be 64-bit!
 
 ### Troubleshooting
-* Since the installer moves/copies/modifies files in your game folder, antiviruses may incorrectly
-  flag/block/delete the executable. In that case you may need to whitelist the installer in your
-  antivirus program.
+* Antiviruses may flag/block/delete the installer since it moves/copies/modifies files in your game
+  folder. In that case you may need to whitelist the installer in your antivirus program.
 
 # For developers
 ### How Stardew64Installer works
