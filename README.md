@@ -30,6 +30,11 @@ Follow these instructions closely! This needs a special version of the game.
       `StardewValley.exe`. (There's no installer currently.)
 5. Run `StardewModdingAPI.exe` in the depot folder and it should be 64-bit!
 
+### Troubleshooting
+* Since the installer moves/copies/modifies files in your game folder, antiviruses may incorrectly
+  flag/block/delete the executable. In that case you may need to whitelist the installer in your
+  antivirus program.
+
 # For developers
 ### How Stardew64Installer works
 The solution is split into four projects:
