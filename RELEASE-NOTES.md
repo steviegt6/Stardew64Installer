@@ -1,6 +1,12 @@
 ﻿← [README](README.md)
 
 ## Upcoming release
+* Fixed errors initializing GOG Galaxy and Steam SDKs (thanks to Pathoschild!).
+* Removed `MonoMod.Utils.dll` dependency added to game folder (thanks to Pathoschild!).
+
+## 1.1.3
+Released 14 April 2021.
+
 * Added support for patching the same game folder more than once (thanks to Pathoschild!).
 * Added `Game1.Stardew64InstallerVersion` field so SMAPI can log the patch tool version (thanks to Pathoschild!).
 * Improved error-handling for game path (thanks to Pathoschild!).
