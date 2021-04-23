@@ -1,6 +1,7 @@
 ﻿← [README](README.md)
 
 ## Upcoming release
+* Fixed errors initializing GOG Galaxy and Steam SDKs (thanks to Pathoschild!).
 * Removed `MonoMod.Utils.dll` dependency added to game folder (thanks to Pathoschild!).
 
 ## 1.1.3
