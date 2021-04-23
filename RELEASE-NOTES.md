@@ -1,8 +1,9 @@
 ﻿← [README](README.md)
 
 ## Upcoming release
-* Fixed errors initializing GOG Galaxy and Steam SDKs (thanks to Pathoschild!).
-* Removed `MonoMod.Utils.dll` dependency added to game folder (thanks to Pathoschild!).
+* Added the version number to the installer window title to simplify troubleshooting (thanks to Pathoschild!).
+* Fixed errors initializing the GOG Galaxy and Steam SDKs (thanks to Pathoschild!).
+* Removed the `MonoMod.Utils.dll` dependency added to the game folder (thanks to Pathoschild!).
 
 ## 1.1.3
 Released 14 April 2021.

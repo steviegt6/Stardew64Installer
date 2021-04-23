@@ -41,6 +41,8 @@ namespace Stardew64Installer
         /// <summary>The console app entry point.</summary>
         public static void Main()
         {
+            Console.Title = $"Stardew64Installer {Constants.Stardew64InstallerVersion} - {Console.Title}";
+
             Console.WriteLine("Welcome to the Stardew Valley 64-bit patcher!");
             Console.WriteLine(" Please note that this program requires a copy of the Linux version of Stardew Valley.");
             Console.WriteLine(" You will have to install this manually through DepotDownloader.");
