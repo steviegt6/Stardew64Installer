@@ -43,6 +43,15 @@ project | purpose
 These work together to automatically patch the game files. Behind the scenes, `CorFlags.exe` is
 used to modify `StardewValley.exe` and MonoMod is used to rewrite the assemblies.
 
+The project also includes these DLLs in `libs\CopyToGameFolder`, which are copied into the game
+folder to fix 64-bit compatibility:
+
+file | description
+---- | -----------
+`Galaxy64.dll`<br />`GalaxyCSharp.dll`<br />`GalaxyCSharpGlue.dll` | New files (except `GalaxyCSharp.dll` which replaces a 32-bit version in the game folder). These are the 64-bit [GOG Galaxy SDK](https://docs.gog.com/sdk/).
+`SDL2.dll`<br />`soft_oal.dll` | New files. These are [Simple DirectMedia Layer](https://www.libsdl.org/) and [OpenAL](https://openal.org/), audio dependencies used by the game and needed to run the Linux version on Windows.
+`steam_api64.dll`<br />`Steamworks.NET.dll` | These replace 32-bit versions in the game folder. These are the latest 64-bit Windows [Steamworks.NET](https://github.com/rlabrecque/Steamworks.NET) release.
+
 ### Contributing
 Contributing is simple. I don't have a set style guide or any real guidelines to follow, feel free
 to submit pull requests and explain your reasoning. We'll discuss further once a pull request is
