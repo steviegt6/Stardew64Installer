@@ -16,8 +16,11 @@ namespace Stardew64Installer
         /// <summary>The absolute path to the installer folder.</summary>
         private static readonly string InstallerPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 
-        /// <summary>The relative path within the installer and staging folders that contains DLLs to copy into the game folder.</summary>
-        private static readonly string CopyToGameFolderRelativePath = Path.Combine("libs", "CopyToGameFolder");
+        /// <summary>The relative path within the installer folder that contains DLLs and other files used by the installer.</summary>
+        private const string InternalsDirName = "internal";
+
+        /// <summary>The relative path within the staging folder that contains DLLs to copy into the game folder.</summary>
+        private const string CopyToGameDirName = "CopyToGameFolder";
 
         /// <summary>The absolute path to a temporary one-use folder in which to store intermediate files during installation.</summary>
         private static readonly string StagingPath = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N"));
@@ -43,6 +46,8 @@ namespace Stardew64Installer
         {
             Console.Title = $"Stardew64Installer {Constants.Stardew64InstallerVersion} - {Console.Title}";
 
+            AppDomain.CurrentDomain.AssemblyResolve += Program.CurrentDomain_AssemblyResolve;
+
             Console.WriteLine("Welcome to the Stardew Valley 64-bit patcher!");
             Console.WriteLine(" Please note that this program requires a copy of the Linux version of Stardew Valley.");
             Console.WriteLine(" You will have to install this manually through DepotDownloader.");
@@ -54,6 +59,29 @@ namespace Stardew64Installer
         /*********
         ** Private methods
         *********/
+        /// <summary>Method called when assembly resolution fails, which may return a manually resolved assembly.</summary>
+        /// <param name="sender">The event sender.</param>
+        /// <param name="e">The event arguments.</param>
+        private static Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs e)
+        {
+            try
+            {
+                AssemblyName name = new AssemblyName(e.Name);
+                foreach (FileInfo dll in new DirectoryInfo(Path.Combine(Program.InstallerPath, Program.InternalsDirName)).EnumerateFiles("*.dll"))
+                {
+                    if (name.Name.Equals(AssemblyName.GetAssemblyName(dll.FullName).Name, StringComparison.OrdinalIgnoreCase))
+                        return Assembly.LoadFrom(dll.FullName);
+                }
+
+                return null;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error resolving assembly: {ex}");
+                return null;
+            }
+        }
+
         private static void Prompt()
         {
             while (true)
@@ -147,7 +175,7 @@ namespace Stardew64Installer
             stagingDir = new DirectoryInfo(StagingPath);
 
             // copy installer files
-            new DirectoryInfo(InstallerPath).RecursiveCopyTo(stagingDir.FullName);
+            new DirectoryInfo(Path.Combine(InstallerPath, InternalsDirName)).RecursiveCopyTo(stagingDir.FullName);
 
             // copy game DLLs
             foreach (FileInfo dll in installDir.GetFiles("*.dll"))
@@ -171,8 +199,8 @@ namespace Stardew64Installer
                 return false;
             }
 
-            // copy overwrite files
-            foreach (FileInfo dll in new DirectoryInfo(Path.Combine(InstallerPath, CopyToGameFolderRelativePath)).GetFiles("*.dll"))
+            // merge overwrite files into staging folder
+            foreach (FileInfo dll in new DirectoryInfo(Path.Combine(stagingDir.FullName, CopyToGameDirName)).GetFiles("*.dll"))
                 dll.CopyToAndWait(Path.Combine(stagingDir.FullName, dll.Name));
 
             Console.WriteLine();
@@ -193,7 +221,7 @@ namespace Stardew64Installer
             // apply CorFlags
             string modifiedExeName = MonoModdedPrefix + ExeName;
             Console.WriteLine($"Patching {modifiedExeName} flags with CorFlags... (If this doesn't work, please relaunch with administrator privileges.)");
-            RunCommand($"{Path.Combine("libs", "CorFlags.exe")} {modifiedExeName} /32BITREQ-", workingPath: stagingDir.FullName);
+            RunCommand($"CorFlags.exe {modifiedExeName} /32BITREQ-", workingPath: stagingDir.FullName);
             Console.WriteLine();
 
             return true;
@@ -206,7 +234,7 @@ namespace Stardew64Installer
         {
             // copy override files
             Console.WriteLine("Copying override files...");
-            DirectoryInfo overridesFolder = new DirectoryInfo(Path.Combine(stagingDir.FullName, CopyToGameFolderRelativePath));
+            DirectoryInfo overridesFolder = new DirectoryInfo(Path.Combine(stagingDir.FullName, CopyToGameDirName));
             foreach (FileInfo dll in overridesFolder.GetFiles("*.dll"))
             {
                 string dllName = dll.Name;

@@ -5,6 +5,14 @@
     <AssemblyName>Stardew64Installer</AssemblyName>
     <RootNamespace>Stardew64Installer</RootNamespace>
     <OutputType>Exe</OutputType>
+
+    <!--absolute path to the compiled installer package to generate-->
+    <PackagePath>$(SolutionDir)\Stardew64Installer\bin\$(Configuration)\net452\Stardew64Installer $(Version)</PackagePath>
+
+    <!--run the compiled installer package on launch-->
+    <StartAction>Program</StartAction>
+    <StartProgram>$(PackagePath)\Stardew64Installer.exe</StartProgram>
+    <StartWorkingDirectory>$(PackagePath)</StartWorkingDirectory>
   </PropertyGroup>
 
   <ItemGroup>
@@ -17,13 +25,18 @@
     <ProjectReference Include="..\StardewValley.Patches.mm\StardewValley.Patches.mm.csproj" />
   </ItemGroup>
 
-  <Target Name="CopyGameFiles" AfterTargets="AfterBuild">
+  <Target Name="PrepareInstallerPackage" AfterTargets="AfterBuild">
     <ItemGroup>
-      <GameFiles Include="..\libs\CopyToGameFolder\*.dll" />
+      <RootFiles Include="$(OutDir)\Stardew64Installer.exe" />
+      <InternalFiles Include="$(OutDir)\*.*" />
+      <InternalFiles Include="..\libs\CorFlags.exe" />
+      <InternalFiles Remove="@(InstallerFiles)" />
+      <CopyToGameFolderFiles Include="..\libs\CopyToGameFolder\*" />
     </ItemGroup>
 
-    <Copy SourceFiles="..\libs\CorFlags.exe" DestinationFolder="$(OutDir)\libs" />
-    <Copy SourceFiles="@(GameFiles)" DestinationFolder="$(OutDir)\libs\CopyToGameFolder" />
+    <Copy SourceFiles="@(RootFiles)" DestinationFolder="$(PackagePath)" />
+    <Copy SourceFiles="@(InternalFiles)" DestinationFolder="$(PackagePath)/internal" />
+    <Copy SourceFiles="@(CopyToGameFolderFiles)" DestinationFolder="$(PackagePath)/internal/CopyToGameFolder" />
   </Target>
 
   <Import Project="..\Stardew64Installer.Framework\Stardew64Installer.Framework.projitems" Label="Shared" />
