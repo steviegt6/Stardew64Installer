@@ -1,6 +1,7 @@
 ﻿← [README](README.md)
 
 ## Upcoming release
+* Simplified installer file structure for players (thanks to Pathoschild!).
 * Fixed `libSkiaSharp` error when taking in-game screenshots (thanks to Pathoschild!).
 
 ## 1.1.4

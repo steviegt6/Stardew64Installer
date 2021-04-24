@@ -63,7 +63,8 @@ To prepare a release build:
 
 1. Update `common.targets`, `RELEASE-NOTES.md`, and `Stardew64Installer.Framework/Constants` for the new version.
 2. Build the solution in Release mode.
-3. Zip the contents of `Stardew64Installer/bin/Release/net452` into a file like `Stardew64Installer 1.1.4.zip`.
+3. Go to `Stardew64Installer/bin/Release/net452`.
+4. Zip the `Stardew64Installer *` folder for the current version.
 4. Upload or share that file.
 
 ## See also
