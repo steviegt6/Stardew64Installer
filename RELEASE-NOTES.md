@@ -1,6 +1,8 @@
 ﻿← [README](README.md)
 
-## Upcoming release
+## 1.1.5
+Released 23 April 2021.
+
 * Simplified installer file structure for players (thanks to Pathoschild!).
 * Fixed `libSkiaSharp` error when taking in-game screenshots (thanks to Pathoschild!).
 

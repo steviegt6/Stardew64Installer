@@ -4,6 +4,6 @@
     internal static class Constants
     {
         /// <summary>The version of this patch tool.</summary>
-        public const string Stardew64InstallerVersion = "1.1.4";
+        public const string Stardew64InstallerVersion = "1.1.5";
     }
 }
