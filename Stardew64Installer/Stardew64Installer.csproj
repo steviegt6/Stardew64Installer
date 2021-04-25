@@ -28,9 +28,14 @@
   <Target Name="PrepareInstallerPackage" AfterTargets="AfterBuild">
     <ItemGroup>
       <RootFiles Include="$(OutDir)\Stardew64Installer.exe" />
-      <InternalFiles Include="$(OutDir)\*.*" />
+      <RootFiles Include="$(OutDir)\Stardew64Installer.exe.config" />
+
+      <InternalFiles Include="$(OutDir)\*.dll" />
+      <InternalFiles Include="$(OutDir)\*.exe" />
+      <InternalFiles Include="$(OutDir)\*.pdb" />
       <InternalFiles Include="..\libs\CorFlags.exe" />
-      <InternalFiles Remove="@(InstallerFiles)" />
+      <InternalFiles Remove="$(OutDir)\Stardew64Installer.*" />
+
       <CopyToGameFolderFiles Include="..\libs\CopyToGameFolder\*" />
     </ItemGroup>
 
