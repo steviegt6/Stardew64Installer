@@ -1,5 +1,8 @@
 ﻿← [README](README.md)
 
+## Upcoming release
+* Fixed installer window closing immediately if an unhandled occurs.
+
 ## 1.1.5
 Released 23 April 2021.
 
