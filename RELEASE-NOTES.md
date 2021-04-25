@@ -1,43 +1,43 @@
 ﻿← [README](README.md)
 
 ## 1.1.6
-Released 24 April 2021.
+Released 24 April 2021. Updated by Pathoschild.
 
 * Changed _press any key to exit_ to _press enter to exit_, to avoid accidentally closing window.
 * Fixed assembly load error for some players.
-* Fixed installer window closing immediately if an unhandled occurs.
+* Fixed installer window closing immediately if an unhandled error occurs.
 
 ## 1.1.5
-Released 23 April 2021.
+Released 23 April 2021. Updated by Pathoschild.
 
-* Simplified installer file structure for players (thanks to Pathoschild!).
-* Fixed `libSkiaSharp` error when taking in-game screenshots (thanks to Pathoschild!).
+* Simplified installer file structure for players.
+* Fixed `libSkiaSharp` error when taking in-game screenshots.
 
 ## 1.1.4
-Released 22 April 2021.
+Released 22 April 2021. Updated by Pathoschild.
 
-* Added the version number to the installer window title to simplify troubleshooting (thanks to Pathoschild!).
-* Fixed errors initializing the GOG Galaxy and Steam SDKs (thanks to Pathoschild!).
-* Removed the `MonoMod.Utils.dll` dependency added to the game folder (thanks to Pathoschild!).
+* Added the version number to the installer window title to simplify troubleshooting.
+* Fixed errors initializing the GOG Galaxy and Steam SDKs.
+* Removed the `MonoMod.Utils.dll` dependency added to the game folder.
 
 ## 1.1.3
-Released 14 April 2021.
+Released 14 April 2021. Updated by Pathoschild.
 
-* Added support for patching the same game folder more than once (thanks to Pathoschild!).
-* Added `Game1.Stardew64InstallerVersion` field so SMAPI can log the patch tool version (thanks to Pathoschild!).
-* Improved error-handling for game path (thanks to Pathoschild!).
-* Fixed issue where a failed install would ask for a new game path, install to that folder, then try to resume the previous failed install (thanks to Pathoschild!).
+* Added support for patching the same game folder more than once.
+* Added `Game1.Stardew64InstallerVersion` field so SMAPI can log the patch tool version.
+* Improved error-handling for game path.
+* Fixed issue where a failed install would ask for a new game path, install to that folder, then try to resume the previous failed install.
 
 ## 1.1.2
-Released 03 April 2021.
+Released 03 April 2021. Updated by Pathoschild.
 
-* Fixed `MonoGame.Framework` patches not being applied (thanks to Pathoschild!).
-* Internal refactoring (thanks to Pathoschild!).
+* Fixed `MonoGame.Framework` patches not being applied.
+* Internal refactoring.
 
 ## 1.1.1
-Released 27 March 2021.
+Released 27 March 2021. Updated by Pathoschild.
 
-* Fixed errors due to inconsistent asset key normalization (thanks to Pathoschild!).
+* Fixed errors due to inconsistent asset key normalization.
 
 ## 1.1
 Released 23 March 2021.
