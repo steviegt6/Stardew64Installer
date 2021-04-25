@@ -1,6 +1,8 @@
 ﻿← [README](README.md)
 
-## Upcoming release
+## 1.1.6
+Released 24 April 2021.
+
 * Changed _press any key to exit_ to _press enter to exit_, to avoid accidentally closing window.
 * Fixed assembly load error for some players.
 * Fixed installer window closing immediately if an unhandled occurs.
