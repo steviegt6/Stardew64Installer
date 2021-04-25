@@ -60,7 +60,7 @@ namespace Stardew64Installer
             catch (Exception ex)
             {
                 LogError(ex.ToString());
-                WriteReadKey("Press any key to exit...");
+                WriteReadLine("Press enter to exit...");
             }
         }
 
@@ -102,7 +102,7 @@ namespace Stardew64Installer
                     // TODO: Integrate this into this program... eventually?
                     Console.WriteLine();
                     Console.WriteLine("Please download DepotDownloader through https://github.com/SteamRE/DepotDownloader");
-                    WriteReadKey("Press any key to exit...");
+                    WriteReadLine("Press enter to exit...");
                     break;
                 }
                 if (option == "2")
@@ -156,7 +156,7 @@ namespace Stardew64Installer
             }
 
             SetColor(ConsoleColor.Green, () => Console.WriteLine($"Installation complete! Please launch {ExeName} from the game folder."));
-            WriteReadKey("Press any key to exit...");
+            WriteReadLine("Press enter to exit...");
         }
 
         /// <summary>Write a message and wait for the user to hit enter.</summary>
@@ -165,14 +165,6 @@ namespace Stardew64Installer
         {
             Console.WriteLine(message);
             return Console.ReadLine();
-        }
-
-        /// <summary>Write a message and wait for the user to press any key.</summary>
-        /// <param name="message">The message to log.</param>
-        private static void WriteReadKey(string message)
-        {
-            Console.WriteLine(message);
-            Console.ReadKey();
         }
 
         /// <summary>Create the staging folder with all the files needed to run the patcher.</summary>

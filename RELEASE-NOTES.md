@@ -1,6 +1,7 @@
 ﻿← [README](README.md)
 
 ## Upcoming release
+* Changed _press any key to exit_ to _press enter to exit_, to avoid accidentally closing window.
 * Fixed installer window closing immediately if an unhandled occurs.
 
 ## 1.1.5
