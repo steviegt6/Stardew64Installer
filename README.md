@@ -17,8 +17,7 @@ Follow these instructions closely! This needs a special version of the game.
    1. Download and unzip [Stardew64Installer from the releases page](https://github.com/Steviegt6/Stardew64Installer/releases).
    2. Double-click `Stardew64Installer.exe` and follow the on-screen instructions.
 4. Install SMAPI 64-bit:
-   1. ~~Download and unzip [SMAPI 3.9.6 or later](https://smapi.io/).~~  
-      ***Note:*** 64-bit SMAPI is not released yet.
+   1. Download and unzip [SMAPI 3.10 or later](https://smapi.io/).  
    2. Run the SMAPI installer to install it (it will detect 64-bit mode automatically).  
       _Tip: if it chooses a different game folder, rename the detected folder temporarily and try
       it again; the installer should then ask for the game path._
