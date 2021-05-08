@@ -10,7 +10,7 @@ using StardewValley;
 
 namespace Stardew64Installer.Patches.StardewValley
 {
-    /// <summary>A MonoMod patch that reimplements the <see cref="KeyboardDispatcher"/> constructor to remove a Linux-only check around the <see cref="GameWindow.TextInput"/> event set, ensures that <see cref="KeyboardInput.Initialize"/> is called, and removes the unneeded <see cref="KeyboardInput.CharEntered"/> and <see cref="KeyboardInput.KeyDown"/> events.</summary>
+    /// <summary>A MonoMod patch that reimplements the <see cref="KeyboardDispatcher"/> constructor to remove a Linux-only check around the <see cref="GameWindow.TextInput"/> event set and removes the unneeded <see cref="KeyboardInput.CharEntered"/> and <see cref="KeyboardInput.KeyDown"/> events.</summary>
     [MonoModPatch("global::StardewValley.KeyboardDispatcher")]
     internal class KeyboardDispatcherPatches : KeyboardDispatcher
     {
@@ -31,7 +31,8 @@ namespace Stardew64Installer.Patches.StardewValley
             Delegate handler = Delegate.CreateDelegate(windowTextInput.EventHandlerType, this, "Event_TextInput");
             windowTextInput.AddEventHandler(window, handler);
 
-            KeyboardInput.Initialize(window);
+            if (Game1.game1.IsMainInstance) 
+                KeyboardInput.Initialize(window);
         }
 
         /// <inheritdoc />

@@ -1,5 +1,10 @@
 ﻿← [README](README.md)
 
+## 1.1.7
+Released 8 May 2021. Updated by Steviegt6.
+
+* Fixed issue with split-screen resulting from unchecked `KeyboardDispatcher` initialization.
+
 ## 1.1.6
 Released 24 April 2021. Updated by Pathoschild.
 
