@@ -66,5 +66,9 @@ Released 17 March 2021.
 ## 1.0
 Released 16 March 2021.
 
-* Initial implementation.  
-  Thanks to [@Dradonhunter11](https://github.com/Dradonhunter11) for figuring out how to make Stardew Valley 64-bit actually work! The installer automates that process.
+* Initial release.
+
+Credits for the initial work:
+* [@Dradonhunter11](https://github.com/Dradonhunter11) for figuring out how to make Stardew Valley 64-bit actually work.
+* [@Steviegt6](https://github.com/Steviegt6) for the implementation.
+* CiscoRamon for putting Steviegt6 and Dradonhunter11 in touch with [@Pathoschild](https://github.com/Pathoschild) to start this project.
