@@ -47,6 +47,17 @@ namespace Stardew64Installer.Framework
             return Type.GetType(name, throwOnError: false) ?? throw new InvalidOperationException($"Can't find type '{name}'.");
         }
 
+        /// <summary>Attempts to get a type without asserting that it's present.</summary>
+        /// <param name="name">The type and assembly name.</param>
+        /// <param name="type">The requested type.</param>
+        /// <returns>True if the type requests actually exists.</returns>
+        public static bool RequestType(string name, out Type type)
+        {
+            type = Type.GetType(name, throwOnError: false);
+
+            return type != null;
+        }
+
         /// <summary>Get a nested type and assert that it's present.</summary>
         /// <param name="type">The type whose members to search.</param>
         /// <param name="name">The nested type name.</param>
