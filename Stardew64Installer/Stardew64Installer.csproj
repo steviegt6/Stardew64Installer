@@ -24,6 +24,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Mono.Cecil" Version="0.11.3" />
     <PackageReference Include="MonoMod" Version="21.3.1.1" />
     <PackageReference Include="MonoMod.RuntimeDetour" Version="21.3.1.1" />
   </ItemGroup>
@@ -45,11 +46,14 @@
       <InternalFiles Remove="$(OutDir)\Stardew64Installer.*" />
 
       <CopyToGameFolderFiles Include="..\libs\CopyToGameFolder\*" />
+
+      <CopyToDepotFolder Include="..\libs\DepotDownloader\*" />
     </ItemGroup>
 
     <Copy SourceFiles="@(RootFiles)" DestinationFolder="$(PackagePath)" />
     <Copy SourceFiles="@(InternalFiles)" DestinationFolder="$(PackagePath)/internal" />
     <Copy SourceFiles="@(CopyToGameFolderFiles)" DestinationFolder="$(PackagePath)/internal/CopyToGameFolder" />
+    <Copy SourceFiles="@(CopyToDepotFolder)" DestinationFolder="$(PackagePath)/internal/DepotDownloader" />
   </Target>
 
   <Import Project="..\Stardew64Installer.Framework\Stardew64Installer.Framework.projitems" Label="Shared" />
