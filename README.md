@@ -16,7 +16,6 @@ Follow these instructions closely! This needs a special version of the game.
 3. Make Stardew Valley 64-bit:
    1. Download and unzip [Stardew64Installer from the releases page](https://github.com/Steviegt6/Stardew64Installer/releases).
    2. Double-click `Stardew64Installer.exe` and follow the on-screen instructions.
-   3. Stop here if you do not want to use SMAPI (run the game by executing StardewValley.exe). Continue reading otherwise.
 4. Install SMAPI 64-bit:
    1. Download and unzip [SMAPI 3.10 or later](https://smapi.io/).  
    2. Run the SMAPI installer to install it (it will detect 64-bit mode automatically).  

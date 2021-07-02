@@ -4,7 +4,6 @@
   <PropertyGroup>
     <AssemblyName>Stardew64Installer</AssemblyName>
     <RootNamespace>Stardew64Installer</RootNamespace>
-    <TargetFramework>net5.0</TargetFramework>
     <OutputType>Exe</OutputType>
 
     <!--absolute path to the compiled installer package to generate-->
@@ -25,12 +24,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="MonoMod" Version="21.6.21.1" />
-    <PackageReference Include="MonoMod.RuntimeDetour" Version="21.6.21.1" />
+    <PackageReference Include="MonoMod" Version="21.3.1.1" />
+    <PackageReference Include="MonoMod.RuntimeDetour" Version="21.3.1.1" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DepotDownloader\DepotDownloader\DepotDownloader.csproj" />
     <ProjectReference Include="..\MonoGame.Framework.Patches.mm\MonoGame.Framework.Patches.mm.csproj" />
     <ProjectReference Include="..\StardewValley.Patches.mm\StardewValley.Patches.mm.csproj" />
   </ItemGroup>
@@ -38,6 +36,7 @@
   <Target Name="PrepareInstallerPackage" AfterTargets="AfterBuild">
     <ItemGroup>
       <RootFiles Include="$(OutDir)\Stardew64Installer.exe" />
+      <RootFiles Include="$(OutDir)\Stardew64Installer.exe.config" />
 
       <InternalFiles Include="$(OutDir)\*.dll" />
       <InternalFiles Include="$(OutDir)\*.exe" />
