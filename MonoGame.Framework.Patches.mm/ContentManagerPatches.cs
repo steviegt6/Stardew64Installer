@@ -19,7 +19,9 @@ namespace Stardew64Installer.Patches.MonoGameFramework
         public ContentManagerPatches(IServiceProvider serviceProvider, string rootDirectory)
             : base(serviceProvider, rootDirectory) { }
 
+
         // MonoMod-added method since we patch Load<T>(string)
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>")]
         public extern T orig_Load<T>(string assetName);
 
         /// <inheritdoc />

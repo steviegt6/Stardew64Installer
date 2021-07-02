@@ -44,6 +44,10 @@ namespace Stardew64Installer
         /// <summary>The console app entry point.</summary>
         public static void Main()
         {
+            if (!OperatingSystem.IsWindows())
+                throw new PlatformNotSupportedException(
+                    "Stardew64Installer is designed for Windows, and is only useful TO Windows. Unix-based platforms already have a 64-bit version of Stardew Valley.");
+
             Console.Title = $"Stardew64Installer {Constants.Stardew64InstallerVersion} - {Console.Title}";
 
             AppDomain.CurrentDomain.AssemblyResolve += Program.CurrentDomain_AssemblyResolve;
@@ -75,7 +79,7 @@ namespace Stardew64Installer
         {
             try
             {
-                AssemblyName name = new AssemblyName(e.Name);
+                var name = new AssemblyName(e.Name);
                 foreach (FileInfo dll in new DirectoryInfo(Path.Combine(Program.InstallerPath, Program.InternalsDirName)).EnumerateFiles("*.dll"))
                 {
                     if (name.Name.Equals(AssemblyName.GetAssemblyName(dll.FullName).Name, StringComparison.OrdinalIgnoreCase))
@@ -235,7 +239,7 @@ namespace Stardew64Installer
         {
             // copy override files
             Console.WriteLine("Copying override files...");
-            DirectoryInfo overridesFolder = new DirectoryInfo(Path.Combine(stagingDir.FullName, CopyToGameDirName));
+            var overridesFolder = new DirectoryInfo(Path.Combine(stagingDir.FullName, CopyToGameDirName));
             foreach (FileInfo dll in overridesFolder.GetFiles("*.dll"))
             {
                 string dllName = dll.Name;

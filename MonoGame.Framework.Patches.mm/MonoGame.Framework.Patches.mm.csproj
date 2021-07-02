@@ -4,6 +4,7 @@
   <PropertyGroup>
     <AssemblyName>MonoGame.Framework.Patches.mm</AssemblyName>
     <RootNamespace>Stardew64Installer.Patches.MonoGameFramework</RootNamespace>
+    <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -15,8 +16,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="MonoMod" Version="21.3.1.1" />
-    <PackageReference Include="MonoMod.RuntimeDetour" Version="21.3.1.1" />
+    <PackageReference Include="MonoMod" Version="21.6.21.1" />
+    <PackageReference Include="MonoMod.RuntimeDetour" Version="21.6.21.1" />
   </ItemGroup>
 
   <ItemGroup>
