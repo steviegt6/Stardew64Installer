@@ -1,5 +1,10 @@
 ﻿← [README](README.md)
 
+## 1.1.8
+Unrealed. Updated by Steviegt6
+
+* Compiles directly to x86 instead of AnyCPU due to the actual StardewValley dependency being a strictly-32bit program.
+
 ## 1.1.7
 Released 8 May 2021. Updated by Steviegt6.
 
