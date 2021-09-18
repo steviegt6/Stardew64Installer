@@ -1,6 +1,8 @@
 **Stardew64Installer** is a handy piece of software that turns the Linux version of Stardew Valley
 into a working 64-bit Windows version!
 
+**With SDV 1.5 (& 64bit MG!) on the horizon, this program will be archived until further notice. Feel free to fork it and make changes if you wish to do so, but this repository will no longer be updated for the forseeable future.**
+
 # For players
 ### Install guide
 Follow these instructions closely! This needs a special version of the game.
