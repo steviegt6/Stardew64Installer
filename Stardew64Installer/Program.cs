@@ -22,6 +22,12 @@ namespace Stardew64Installer
         /// <summary>The relative path within the staging folder that contains DLLs to copy into the game folder.</summary>
         private const string CopyToGameDirName = "CopyToGameFolder";
 
+        /// <summary>The relative path withing the internal folder that contains DepotDownloader resources.</summary>
+        private const string DepotDownloaderPath = "DepotDownloader";
+
+        /// <summary>The relative path in relation to the base release directory.</summary>
+        private const string DownloadedDepotsPath = "depots";
+
         /// <summary>The absolute path to a temporary one-use folder in which to store intermediate files during installation.</summary>
         private static readonly string StagingPath = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N"));
 
@@ -99,10 +105,7 @@ namespace Stardew64Installer
 
                 if (option == "1")
                 {
-                    // TODO: Integrate this into this program... eventually?
-                    Console.WriteLine();
-                    Console.WriteLine("Please download DepotDownloader through https://github.com/SteamRE/DepotDownloader");
-                    WriteReadLine("Press enter to exit...");
+                    PromptDepotDownload();
                     break;
                 }
                 if (option == "2")
@@ -116,14 +119,69 @@ namespace Stardew64Installer
             }
         }
 
+        private static void PromptDepotDownload()
+        {
+            Console.WriteLine();
+
+            while (true)
+            {
+                string option = WriteReadLine("Would you like to use DepotDownloader to install the Linux version?" +
+                                              "\n[1] Yes. (prompts for your Steam login credentials!)" +
+                                              "\n[2] No. (you can still use the official Steam depot downloader)").Trim();
+
+                if (option == "1")
+                {
+                    DepotDownload();
+                    break;
+                }
+
+                if (option == "2")
+                    break;
+            }
+        }
+
+        private static void DepotDownload()
+        {
+            Console.WriteLine();
+            Console.WriteLine("Proceeding with depot download... (note that any freezes are normal!)");
+
+            Console.WriteLine();
+            string username = WriteReadLine("Please enter your Steam username:");
+
+            Console.WriteLine();
+            string password = WriteReadLine("Please enter your Steam password:");
+
+            RunCommand($"dotnet {InternalsDirName}\\{DepotDownloaderPath}\\DepotDownloader.dll -app {413150} -depot {413153} -username {username} -password {password}");
+
+            Console.WriteLine();
+
+            while (true)
+            {
+                string option = WriteReadLine("Depot downloading process should have succeeded. Would you like to use these files to install 64bit?" +
+                                              "\n[1] Yes, do not exit program." +
+                                              "\n[2] No, exit program.").Trim();
+
+                if (option == "1")
+                {
+                    Install(Path.Combine(DownloadedDepotsPath, "413153", "6125897"));
+                    break;
+                }
+
+                if (option == "2")
+                    break;
+            }
+        }
+
         /// <summary>Interactively install to the game folder.</summary>
-        private static void Install()
+        private static void Install(string depotDownload = "")
         {
             while (true)
             {
                 // get install path
                 Console.WriteLine();
-                string installPath = WriteReadLine("Please provide the location of the depot-downloaded copy of Stardew Valley:");
+                string installPath = string.IsNullOrEmpty(depotDownload)
+                    ? WriteReadLine("Please provide the location of the depot-downloaded copy of Stardew Valley:")
+                    : Path.Combine(InstallerPath, depotDownload);
                 if (string.IsNullOrWhiteSpace(installPath))
                     continue;
 

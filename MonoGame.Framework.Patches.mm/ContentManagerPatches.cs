@@ -7,7 +7,7 @@ using Stardew64Installer.Framework;
 
 namespace Stardew64Installer.Patches.MonoGameFramework
 {
-    /// <summary>Patches <see cref="ContentManager.Load{T}"/> to normalize assets in the Windows format.</summary>
+    /// <summary>Patches <see cref="ContentManager.Load{T}"/> to normalize assets in the Windows format. This is a SMAPI-only patch.</summary>
     [MonoModPatch("global::Microsoft.Xna.Framework.Content.ContentManager")]
     internal class ContentManagerPatches : ContentManager
     {
@@ -19,9 +19,15 @@ namespace Stardew64Installer.Patches.MonoGameFramework
         public ContentManagerPatches(IServiceProvider serviceProvider, string rootDirectory)
             : base(serviceProvider, rootDirectory) { }
 
+        // MonoMod-added method since we patch Load<T>(string)
+        public extern T orig_Load<T>(string assetName);
+
         /// <inheritdoc />
         public override T Load<T>(string assetName)
         {
+            if (!PatchHelper.RequestType("StardewModdingAPI.Utilities.PathUtilities, StardewModdingAPI",
+                out Type pathUtilitiesType)) return orig_Load<T>(assetName);
+
             // get private fields
             bool disposed = (bool)PatchHelper.RequireField(typeof(ContentManager), "disposed").GetValue(this);
             var loadedAssets = (Dictionary<string, object>)PatchHelper.RequireField(typeof(ContentManager), "loadedAssets").GetValue(this);
@@ -35,8 +41,7 @@ namespace Stardew64Installer.Patches.MonoGameFramework
             // change key normalization
             string key;
             {
-                Type type = PatchHelper.RequireType("StardewModdingAPI.Utilities.PathUtilities, StardewModdingAPI");
-                MethodInfo method = PatchHelper.RequireMethod(type, "NormalizePath");
+                MethodInfo method = PatchHelper.RequireMethod(pathUtilitiesType, "NormalizePath");
                 key = (string)method.Invoke(null, new object[] { assetName });
             }
 

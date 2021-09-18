@@ -1,5 +1,12 @@
 ﻿← [README](README.md)
 
+## 1.1.8
+Released 2 July 2021. Updated by Steviegt6
+
+* Compiles directly to x86 instead of AnyCPU due to the actual StardewValley dependency being a strictly-32bit program.
+* No longer depends on SMAPI, still retains SMAPI patches.
+* Added ability to depot-download using the program + install with that download without having to exit or enter a path.
+
 ## 1.1.7
 Released 8 May 2021. Updated by Steviegt6.
 
